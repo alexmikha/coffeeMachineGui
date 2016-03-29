@@ -1,52 +1,56 @@
-/**
- * Created by mi on 14.03.2016.
- */
-import java.util.Scanner;
 
-//import static Ingredients.map;
-
+import java.util.Arrays;
 
 public class AdminIngradient {
+    private Gui gui;
+    Ingredients ing = new Ingredients(this) ;
+    String passIngr = "i";
+    String loginIngr = "1";
+//    String[] loginYetItem = {" Insert login yet\n"};
+//    String[] passwordYetItem = {" Insert password yet\n"};
+    String[] passwordIngrItem = {" Welcome to menuAdminIngradients\n" + " Enter password\n"};
+    String[] accessAdminIngrItem = {" \nAccess Granted!\n\n" + " add Ingradients - \n" +
+            "press button Yes\n" + " Look the stock Ingradients - \n" + "press button No\n"};
+    String[] addIngrItem = {" Added Ingradients in the stock\n"};
+    final ThreadLocal<String[]> showIngrItem = new ThreadLocal<String[]>() {
+        @Override
+        protected String[] initialValue() {
+            return new String[]{" It left Ingradients in the stock:\n" + " coffee= " + ing.getIsLeftCoffee() + ",\n" +
+                    " milk=" + ing.getIsLeftMilk() + ",\n" + " water=" + ing.getIsLeftWater() + ",\n" + " sugar=" + ing.getIsLeftSugar() + "\n"};
+        }
+    };
 
-    MenuCoffee mc = new MenuCoffee();
-    Ingredients ing = new Ingredients();
-
-    public AdminIngradient() {
+    public AdminIngradient(Gui gui) {
+        this.gui = gui;
     }
 
-    public int adminIngradient() {
-        Gui gui = new Gui();
-        System.out.println("Password:");
-        String pass = "ing";
-
-        Scanner sc = new Scanner(System.in);
-        String adminingrad = sc.nextLine();
-
-        if (adminingrad.equals(pass)) {
-            System.out.println("Access Granted");
-        } else {
-            System.out.println("Insert password yet");
-            return adminIngradient();
+    void controlLoginIngr() {
+        if (gui.getTextField1().getText().equals(loginIngr)) {
+            gui.getTextArea1().append(Arrays.toString(passwordIngrItem));
+            gui.getTextField1().setText("password");
         }
-        System.out.println("Ingredients have been spend: " + Ingredients.map.toString());
-        //       Ingredients ing = new Ingredients();
+    }
+
+    void controlPaswordIngr() {
+        if (gui.getTextField1().getText().equals(passIngr)) {
+        gui.getTextArea1().append(Arrays.toString(accessAdminIngrItem));
+        gui.button10.setEnabled(true);
+        gui.button11.setEnabled(true);
+        }
+    }
+
+    void lookStockIngr() {
+        gui.getTextArea1().append(Arrays.toString(ing.lookIngrItem));
         ing.showIngradients();
+    }
 
-        System.out.println(1 + " -add Ingradients");
-        System.out.println(2 + " -return to menu");
-        sc = new Scanner(System.in);
-        int add = sc.nextInt();
-        if (add == 1) {
-            ing.addIngradientsStock();
-        }
-        if (add == 2) {
-//            mc.menu();
-//            gui.selectDrink();
-        }
-        //       return mc.menu();
- //       gui.selectDrink();
-
-        return add;
+    void addIngradient() {
+        ing.showIngradients();
+        gui.getTextArea1().append(Arrays.toString(showIngrItem.get()));
+        gui.getTextArea1().append(Arrays.toString(ing.showIngr1Item.get()));
+        gui.getTextArea1().append(Arrays.toString(addIngrItem));
+        ing.addIngradientsStock();
     }
 }
+
 
