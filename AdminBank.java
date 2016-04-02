@@ -10,18 +10,16 @@ public class AdminBank {
     String passBank = "b";
     String loginBank = "2";
     String[] passwordBankItem = {" Welcome to menuAdminBank\n" + " Enter password\n"};
-//    String[] passwordYetItem = {" Insert password yet\n"};
-//    String[] loginYetItem = {" Insert login yet\n"};
     String[] accessAdminIngrItem = {" \nAccess Granted!\n\n" + " Take money- press button Yes\n" +
-            " Look all Bank- press button No\n"};
+            " See how much money in the Bank- press button No\n"};
     String[] bankHasItem = {" Bank has: " + bnk.getBankMin() + "$\n"};
 
     final ThreadLocal<String[]> lookAllBankItem = new ThreadLocal<String[]>() {
         @Override
         protected String[] initialValue() {
-            return new String[]{"Bank has: " + getBank() + "\n" +
-                    "Bank has max: " + bnk.getBankMax() + "\n" +
-                    "All Bank: " + bnk.getBankList() + "\n"};
+            return new String[]{" Bank has: " + getBank() + "\n" +
+                    " Bank has max: " + bnk.getBankMax() + "\n" +
+                    " Bank: " + bnk.getBankList() + "\n"};
         }
     };
 
@@ -33,7 +31,7 @@ public class AdminBank {
         }
     };
 
-    public AdminBank(Gui gui) {
+    AdminBank(Gui gui) {
         this.gui = gui;
     }
 
@@ -41,8 +39,8 @@ public class AdminBank {
         if (gui.getTextField1().getText().equals(loginBank)) {
             gui.getTextArea1().append(Arrays.toString(passwordBankItem));
             gui.getTextField1().setText("password");
-            }
         }
+    }
 
     void controlPaswordBank() {
         if (gui.getTextField1().getText().equals(passBank)) {
@@ -52,7 +50,7 @@ public class AdminBank {
         }
     }
 
-    public int takeMoney() {
+    int takeMoney() {
         Bank.getBankList();
         int sum = 0;
         for (Integer b : Bank.bankList) {
@@ -62,11 +60,7 @@ public class AdminBank {
         setBank(sum);
         takeBankAll = bank - bnk.getBankMin();
         setTakeBankAll(takeBankAll);
-
-        System.out.println("Bank has: " + getBank() + "$");
-        System.out.println("Took: " + getTakeBankAll() + "$");
         gui.getTextArea1().append(Arrays.toString(takeBankItem.get()));
-
         Bank.bankList.clear();
         Bank.bankList.add(bnk.getBankMin());
         gui.getTextArea1().append(Arrays.toString(bankHasItem));
@@ -84,19 +78,19 @@ public class AdminBank {
         gui.getTextArea1().append(Arrays.toString(lookAllBankItem.get()));
     }
 
-    public int getTakeBankAll() {
+    int getTakeBankAll() {
         return takeBankAll;
     }
 
-    public void setTakeBankAll(int takeBankAll) {
+    void setTakeBankAll(int takeBankAll) {
         this.takeBankAll = takeBankAll;
     }
 
-    public int getBank() {
+    int getBank() {
         return bank;
     }
 
-    public void setBank(int bank) {
+    void setBank(int bank) {
         this.bank = bank;
     }
 

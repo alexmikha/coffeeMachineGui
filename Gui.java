@@ -1,233 +1,265 @@
-/**
- * Created by mi on 14.03.2016.
- */
+
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 
 public class Gui extends JFrame {
 
-    List<String> moneyList = new ArrayList<String>();
-    List<Integer> moneyInsertList = new ArrayList<Integer>();
-    List<String> sugarList = new ArrayList<String>();
-    List<String> menuList = new ArrayList<String>();
-    List<Integer> checkMoneyList = new ArrayList<Integer>();
+    private List<String> moneyList = new ArrayList<>();
+    private List<String> sugarList = new ArrayList<>();
+    private List<String> menuList = new ArrayList<>();
     RecipeCoffee recipeCoffee = new RecipeCoffee(this);
     CheckMoney checkMoney = new CheckMoney(this);
     Ingredients ingr = new Ingredients(this);
-    //   ChecrkMoney checkMoney = new CheckMoney();
-    Bank bank = new Bank(this);
-    //    DefaultListModel menuModel;
-    //   private ActionEvent e;
-//    static int sugar = 0;
-    int moneycm = 0;
-    int money;
-    static int model;
-    static int mode = 0;
-    int change;
-    static int sugar;
+    AdminBank adminBank = new AdminBank(this);
+    AdminIngradient adminIngr = new AdminIngradient(this);
 
-    public static int getSugar() {
+    Bank bank = new Bank(this);
+    SWorker sw = new SWorker(this);
+    SWorker1 sw1 = new SWorker1(this);
+    int money;
+    static int sugar;
+    private int moneyBad = 0;
+    private int moneyCancel = 0;
+    private ImageIcon imageIcon6;
+    private ImageIcon imageIcon7;
+    private ImageIcon imageIcon8;
+    private ImageIcon imageIcon9;
+    private ImageIcon imageIcon10;
+    private ActionEvent e;
+
+    static int getSugar() {
         return sugar;
     }
 
-    public static void setSugar(int sugar) {
+    static void setSugar(int sugar) {
         Gui.sugar = sugar;
     }
 
+    private String[] menuItem = {"Please select the drink:\n" + " Espresso    prise 5$\n" + " Americano   prise 7$\n" + " Cappuccino  prise 9&\n\n"};
+    private String[] checkAddMoneyItem = {" Not enough money for a drink\n", " Add money\n"};
+    private String[] chooseOrderItem = {" Do You want to cancel your order?\n" + " yes\n" + "  not\n"};
+    private String[] menuSugarItem = {" Do You want with sugar ?\n" + " 0", "1", "2", "3", "4\n\n"};
+    private String[] menuMoneyItem = {" Insert money: ", "1", "2", "5", "10\n\n"};
+    private String[] crowdedBankItem = {" The Bank is full !!!\n"};
+    private String[] cleanedIngrItem = {" Ingradients were cleared !!!\n"};
 
-    //  int item;
-//    String[] menu = {"Espresso, Americano, Cappuccino"};
-//    String[] selectSugar = {"1", "2", "3", "4"};
-//    Integer[] money = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    String[] menuItem = {" Espresso    prise 5$\n" + " Americano   prise 7$\n" + " Cappuccino  prise 9&\n\n"};
-    ////    String[] selectEspressoItem = {"You put: " + moneycm + "$\n" +
-////            "Enough money for: " + recipeCoffee.getName1() + "-" + recipeCoffee.getPriseEspresso() + "$\n"};
-    String[] checkAddMoneyItem = {" Not enough money for a drink\n", " Add money\n"};
-    //    String[] checkBadMoneyItem = {"Introduced not correct money\n", "Take this money " + money + "$\n"};
-    String[] chooseOrderItem = {" Do You want to cancel your order?\n" + " yes\n" + "  not\n"};
-    //    String[] takeChangeItem = {"Take the change: " + change + "$\n"};
-    String[] menuSugarItem = {" Do You want with sugar ?\n" + " 0", "1", "2", "3", "4\n\n"};
-    String[] menuMoneyItem = {" Insert money: ", "1", "2", "5", "10\n\n"};
-    String[] crowdedBankItem = {" The Bank is full !!!\n"};
-    String[] cleanedIngrItem = {" Ingradients were cleared !!!\n"};
+    private ThreadLocal<String[]> cancelOrderItem;
 
-    final ThreadLocal<String[]> cancelOrderItem = new ThreadLocal<String[]>() {
-        @Override
-        protected String[] initialValue() {
-            return new String[]{" Take Your the money: " + moneycm + "$\n" + " Come again\n\n"};
-        }
-    };
+    private ThreadLocal<String[]> takeChangeItem;
 
-    final ThreadLocal<String[]> takeChangeItem = new ThreadLocal<String[]>() {
-        @Override
-        protected String[] initialValue() {
-            return new String[]{" Take the change: " + change + "$\n\n"};
-        }
-    };
-
-    final ThreadLocal<String[]> checkBadMoneyItem = new ThreadLocal<String[]>() {
-        @Override
-        protected String[] initialValue() {
-            return new String[]{" Introduced not correct money\n", " Take this money " + money + "$\n"};
-        }
-    };
-
-
-    private ActionEvent e;
+    private ThreadLocal<String[]> takeBadMoneyItem;
 
     public Gui() {
-
+        super();
         initComponents();
         startCoffeeMachine();
-//        menu();
         selectDrink();
+        ingr.fillStock();
+        imageIcon6 = new ImageIcon(getClass().getResource("/images/CUP_FALL.gif"));
+        imageIcon7 = new ImageIcon(getClass().getResource("/images/MONEY_IN.gif"));
+        imageIcon8 = new ImageIcon(getClass().getResource("/images/Money_out_new.gif"));
+        imageIcon9 = new ImageIcon(getClass().getResource("/images/FALL.jpg"));
+        imageIcon10 = new ImageIcon(getClass().getResource("/images/MONEY.jpg"));
+
+        takeBadMoneyItem = new ThreadLocal<String[]>() {
+            @Override
+            protected String[] initialValue() {
+                return new String[]{" Introduced not correct money\n", " Take this money " + money + "$\n",
+                        " Take this money " + moneyBad + "$\n\n"};
+            }
+        };
+
+        takeChangeItem = new ThreadLocal<String[]>() {
+            @Override
+            protected String[] initialValue() {
+                return new String[]{" Take the change: " + CheckMoney.change + " $\n\n"};
+            }
+        };
+
+        cancelOrderItem = new ThreadLocal<String[]>() {
+            @Override
+            protected String[] initialValue() {
+                return new String[]{" Take Your the money: " + checkMoney.checkMoneyList + " $\n" + "All money: " + moneyCancel +
+                        " $\n" + " Come again\n\n"};
+
+            }
+        };
+    }
+
+    void removeAnimInsertOutMoney() {
+        panel5.remove(label7);
+        label7.setIcon(imageIcon10);
+        panel5.add(label7);
+        panel5.revalidate();
+        panel5.repaint();
+    }
+
+    void removeAnimInsertMoney() {
+        panel5.remove(label7);
+        label7.setIcon(imageIcon10);
+        panel5.add(label7);
+        panel5.revalidate();
+        panel5.repaint();
+    }
+
+    boolean viewInsertMoney() {
+        label7.setIcon(imageIcon7);
+        panel5.add(label7);
+        panel5.revalidate();
+        panel5.repaint();
+        return true;
+    }
+
+    boolean viewOutMoney() {
+        label7.setIcon(imageIcon8);
+        panel5.add(label7);
+        panel5.revalidate();
+        panel5.repaint();
+        return true;
+    }
+
+    void removeAnimDrink() {
+        panel4.remove(label6);
+        panel4.revalidate();
+        panel4.repaint();
+        label6.setIcon(imageIcon9);
+        panel4.add(label6);
+    }
+
+    private void viewCoffeeDrink() {
+        removeAnimDrink();
+        label6.setIcon(imageIcon6);
+        panel4.add(label6);
+        panel4.revalidate();
+        panel4.repaint();
     }
 
     void cleanedIngr() {
         ingr.checkIngradients();
+        bank.checkBank();
         int a = Ingredients.a;
-        if (a == 0)
-            selectDrink();
+        int b = Bank.b;
+        if (a == 0) {
+            unlockControl();
+        }
+        if (a == 1) {
+            textArea1.append(Arrays.toString(cleanedIngrItem));
+            blockControl();
+        }
     }
 
     void crowdedBank() {
         bank.checkBank();
+        ingr.checkIngradients();
+        int a = Ingredients.a;
         int b = Bank.b;
-        if (b == 0)
-            selectDrink();
-
+        if (b == 0) {
+            unlockControl();
+        }
+        if (b == 1) {
+            textArea1.append(Arrays.toString(crowdedBankItem));
+            blockControl();
+        }
     }
 
-    void checkIngBank() {
-//        ingr.checkIngradients();
-//        bank.checkBank();
+    private void unlockControl() {
+        bank.checkBank();
+        ingr.checkIngradients();
+        int a = Ingredients.a;
+        int b = Bank.b;
+        if ((a == 0) && (b == 0)) {
+            button1.setEnabled(true);
+            button2.setEnabled(true);
+            button3.setEnabled(true);
+            button4.setEnabled(true);
+            button5.setEnabled(true);
+            button6.setEnabled(true);
+            button7.setEnabled(true);
+            button7.setEnabled(true);
+            button8.setEnabled(true);
+            button9.setEnabled(true);
+            button10.setEnabled(true);
+            button11.setEnabled(true);
+            textField1.setText(menuList.get(0));
+            textField2.setText(sugarList.get(0));
+            textField3.setText(moneyList.get(0));
+        }
+    }
+
+    private void blockControl() {
+        bank.checkBank();
+        ingr.checkIngradients();
+        int a = Ingredients.a;
+        int b = Bank.b;
+        if ((a == 1) || (b == 1) || (a == 0 && b == 1) || (a == 1 && b == 0)) {
+            button1.setEnabled(false);
+            button2.setEnabled(false);
+            button3.setEnabled(true);
+            button4.setEnabled(false);
+            button5.setEnabled(false);
+            button6.setEnabled(false);
+            button7.setEnabled(false);
+            button7.setEnabled(false);
+            button8.setEnabled(false);
+            button9.setEnabled(false);
+            button10.setEnabled(false);
+            button11.setEnabled(false);
+            if (a == 1) {
+                textField1.setText("login Ingr");
+                textField3.setText("ingr");
+            }
+            if (b == 1) {
+                textField1.setText("login Bank");
+                textField3.setText("bank");
+            }
+            textField2.setText(" ");
+        }
+    }
+
+    private void checkIngBank() {
         cleanedIngr();
         crowdedBank();
     }
 
-    public int checkMoneyEspresso() {
-
-        money = Integer.parseInt(textField3.getText());
-        if (money == 1 || money == 2 || money == 5 || money == 10) {
-            moneycm = money;
-            checkMoneyList.add(moneycm);
-            int sum = 0;
-            for (Integer m : checkMoneyList) {
-                sum = sum + m;
-            }
-            moneycm = sum;
-            if (moneycm < recipeCoffee.getEspresso()) {
-                checkAddMoney();
-            }
-        } else {
-            checkBadMoney();
-        }
-        if (moneycm >= recipeCoffee.getEspresso()) {
-            change = moneycm - recipeCoffee.getEspresso();
-            textArea1.setText("You put: " + moneycm + "$\n" + "Enough money for: " +
-                    recipeCoffee.getName1() + "-" + recipeCoffee.getPriseEspresso() + "$\n\n");
-            chooseOrder();
-        }
-        return 0;
-    }
-
-    public int checkMoneyAmericano() {
-
-        money = Integer.parseInt(textField3.getText());
-        if (money == 1 || money == 2 || money == 5 || money == 10) {
-            moneycm = money;
-            checkMoneyList.add(moneycm);
-            int sum = 0;
-            for (Integer m : checkMoneyList) {
-                sum = sum + m;
-            }
-            moneycm = sum;
-            if (moneycm < recipeCoffee.getAmericano()) {
-                checkAddMoney();
-            }
-        } else {
-            checkBadMoney();
-        }
-        if (moneycm >= recipeCoffee.getAmericano()) {
-            change = moneycm - recipeCoffee.getAmericano();
-            textArea1.setText("You put: " + moneycm + "$\n" + "Enough money for: " +
-                    recipeCoffee.getName2() + "-" + recipeCoffee.getPriseAmericano() + "$\n\n");
-            chooseOrder();
-        }
-        return 0;
-    }
-
-    public int checkMoneyCappuccino() {
-
-        money = Integer.parseInt(textField3.getText());
-        if (money == 1 || money == 2 || money == 5 || money == 10) {
-            moneycm = money;
-            checkMoneyList.add(moneycm);
-            int sum = 0;
-            for (Integer m : checkMoneyList) {
-                sum = sum + m;
-            }
-            moneycm = sum;
-            if (moneycm < recipeCoffee.getCappuccino()) {
-                checkAddMoney();
-            }
-        } else {
-            checkBadMoney();
-        }
-        if (moneycm >= recipeCoffee.getCappuccino()) {
-            change = moneycm - recipeCoffee.getCappuccino();
-            textArea1.setText("You put: " + moneycm + "$\n" + "Enough money for: " +
-                    recipeCoffee.getName3() + "-" + recipeCoffee.getPriseCappuccino() + "$\n\n");
-            chooseOrder();
-        }
-        return 0;
-    }
-
-
-    void makeDrink() {
+    private void makeDrink() {
         if (textField1.getText().equals(menuList.get(0)))
-            //           checkMoneyEspresso();
-            recipeCoffee.recipeEspresso(7, 30, sugar, 5);
+            recipeCoffee.recipeEspresso(7, 30, sugar);
         else if (textField1.getText().equals(menuList.get(1)))
-            recipeCoffee.recipeAmericano(7, 100, sugar, 7);
+            recipeCoffee.recipeAmericano(7, 100, sugar);
         else if (textField1.getText().equals(menuList.get(2)))
-            recipeCoffee.recipeCappuccino(7, 30, 70, sugar, 9);
-        //  }
-
+            recipeCoffee.recipeCappuccino(7, 30, 70, sugar);
         bank.putBank(recipeCoffee.getCost());
-        takeChange(change);
-//        selectDrink();
+        checkMoney.takeChange();
         checkIngBank();
-        //  menu();
-        checkMoneyList.clear();
+        checkMoney.checkMoneyList.clear();
     }
 
-    //   void menu() {
     void selectDrink() {
-        //       checkIngBank();
-        try {
-            Thread.sleep(1000);
-            // any action
-            textArea1.append(Arrays.toString(menuItem));
-//            textArea1.setText("Espresso prise 5$\n" + "Americano prise 7$\n" + "Cappuccino prise 9&\n\n");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        checkMoney.checkMoneyList.clear();
+        CheckMoney.moneycm = 0;
+        bank.checkBank();
+        ingr.checkIngradients();
+        int a = Ingredients.a;
+        int b = Bank.b;
+        if (a == 0 && b == 0) {
+            try {
+                textArea1.append(Arrays.toString(menuItem));
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-
-
     }
 
-
-    void startCoffeeMachine() {
-
+    private void startCoffeeMachine() {
         menuList.add("Espresso");
         menuList.add("Americano");
         menuList.add("Cappuccino");
@@ -248,17 +280,13 @@ public class Gui extends JFrame {
         moneyList.add("8");
         moneyList.add("9");
         moneyList.add("10");
-
     }
 
     private void menuSugar() {
         textArea1.append(Arrays.toString(menuSugarItem));
-//        textArea1.setText("Do You want with sugar ?\n" + "0, " + "1, " + "2, " + "3, " + "4\n");
     }
 
-
-    void addSugar() {// button4+
-
+    private void addSugar() {
         for (int i = 0; i < sugarList.size(); i++) {
             i++;
         }
@@ -271,13 +299,10 @@ public class Gui extends JFrame {
         else if (sugarList.get(3).equals(textField2.getText()))
             textField2.setText("4");
         setSugar(Integer.parseInt(textField2.getText()));
-        ingr.setSugar(getSugar());
-        System.out.println("sugar " + Integer.parseInt(textField2.getText()));
-
+        Ingredients.setSugar(getSugar());
     }
 
-    void minusSugar() {
-
+    private void minusSugar() {
         int i = 0;
         for (sugarList.size(); i >= 0; i--) {
             i--;
@@ -291,15 +316,14 @@ public class Gui extends JFrame {
         else if (sugarList.get(1).equals(textField2.getText()))
             textField2.setText("0");
         setSugar(Integer.parseInt(textField2.getText()));
-        ingr.setSugar(getSugar());
+        Ingredients.setSugar(getSugar());
     }
 
-    void menuMoney() {
+    private void menuMoney() {
         textArea1.append(Arrays.toString(menuMoneyItem));
-//       textArea1.setText("Insert money: " + "1, " + "2, " + "5, " + "10\n");
     }
 
-    void insertAddMoney() { //button7+
+    private void insertAddMoney() {
         for (int i = 0; i < moneyList.size(); i++) {
             i++;
         }
@@ -323,13 +347,11 @@ public class Gui extends JFrame {
             textField3.setText("10");
     }
 
-    void iinsertSubtractMoney() {  //button8-
-
+    private void iinsertSubtractMoney() {
         int i = 0;
         for (moneyList.size(); i >= 0; i--) {
             i--;
         }
-
         if (moneyList.get(9).equals(textField3.getText()))
             textField3.setText("9");
         else if (moneyList.get(8).equals(textField3.getText()))
@@ -348,46 +370,45 @@ public class Gui extends JFrame {
             textField3.setText("2");
         else if (moneyList.get(1).equals(textField3.getText()))
             textField3.setText("1");
-
     }
 
-
     void chooseOrder() {
-
-//        textArea1.setText("Do you want to cancel your order?\n" + " yes\n" + "not\n");
         textArea1.append(Arrays.toString(chooseOrderItem));
     }
 
-    void takeChange(int change) {
-        if (change != 0)
-            textArea1.append(Arrays.toString(takeChangeItem.get()));
-//            textArea1.setText("Take the change: " + change + "$\n");
-    }
-
     void cancelOrder() {
+        int sum = 0;
+        for (Integer i : CheckMoney.checkMoneyList) {
+            sum = sum + i;
+        }
+        moneyCancel = sum;
         textArea1.append(Arrays.toString(cancelOrderItem.get()));
-//        textArea1.setText("Take Your the money: " + textField3.getText() + "$\n" + "Come again\n\n");
-//        menu();
-        selectDrink();
+        try {
+            cancelOrderItem.remove();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
-
-    void checkAddMoney() {
+    void addMoney() {
         textArea1.append(Arrays.toString(checkAddMoneyItem));
-//        textArea1.setText("Not enough money for a drink\n" + "Add money\n");
     }
 
-    public void checkBadMoney() {
+    boolean takeBadMoney() {
+        sw = new SWorker(this);
         money = Integer.parseInt(textField3.getText());
-        textArea1.append(Arrays.toString(checkBadMoneyItem.get()));
-//        textArea1.setText("Introduced not correct money\n" + "Take this money " + money + "$\n");
-//        menu();
-        selectDrink();
+        int sum = 0;
+        for (Integer mon : CheckMoney.checkMoneyList) {
+            sum = sum + mon;
+        }
+        moneyBad = sum;
+        textArea1.setText(" Introduced not correct money\n" + " Take this money " + money + "$\n" +
+                " Take this money " + moneyBad + "$\n\n");
+        sw.execute();
+        return true;
     }
 
-
-    void selectAddRecipe() {
-
+    private void selectAddRecipe() {
         for (int i = 0; i < menuList.size(); i++) {
             i++;
         }
@@ -397,8 +418,7 @@ public class Gui extends JFrame {
             textField1.setText(recipeCoffee.getName3());
     }
 
-    void selesctMinusRecipe() {
-
+    private void selesctMinusRecipe() {
         int i = 0;
         for (menuList.size(); i >= 0; i--) {
             i--;
@@ -409,29 +429,63 @@ public class Gui extends JFrame {
             textField1.setText(recipeCoffee.getName1());
     }
 
-    public JTextField getTextField1() {
-        return textField1;
+    void putMoneyEspresso() {
+        if (CheckMoney.moneycm >= recipeCoffee.getPriseEspresso()) {
+            textArea1.setText(" You put: " + CheckMoney.moneycm + "$\n" + " Enough money for: " +
+                    recipeCoffee.getName1() + "-" + recipeCoffee.getPriseEspresso() + "$\n\n");
+            chooseOrder();
+        }
     }
 
-    public void setTextField1(JTextField textField1) {
-        this.textField1 = textField1;
+    void putMoneyAmericano() {
+        if (CheckMoney.moneycm >= recipeCoffee.getPriseAmericano()) {
+            textArea1.setText(" You put: " + CheckMoney.moneycm + "$\n" + " Enough money for: " +
+                    recipeCoffee.getName2() + "-" + recipeCoffee.getPriseAmericano() + "$\n\n");
+            chooseOrder();
+        }
+    }
+
+    void putMoneyCappuccino() {
+        if (CheckMoney.moneycm >= recipeCoffee.getPriseCappuccino()) {
+            textArea1.setText(" You put: " + CheckMoney.moneycm + "$\n" + " Enough money for: " +
+                    recipeCoffee.getName3() + "-" + recipeCoffee.getPriseCappuccino() + "$\n\n");
+            chooseOrder();
+        }
     }
 
     private void button1ActionPerformed(ActionEvent e) {
-
+        this.e = e;
         selectAddRecipe();
     }
 
     private void button2ActionPerformed(ActionEvent e) {
+        this.e = e;
         selesctMinusRecipe();
-
     }
 
     private void button3ActionPerformed(ActionEvent e) {
-        menuSugar();
+        this.e = e;
+        if (textField1.getText().equals(recipeCoffee.getName1()) ||
+                textField1.getText().equals(recipeCoffee.getName2()) ||
+                textField1.getText().equals(recipeCoffee.getName3())) {
+            menuSugar();
+        }
+        if (textField3.getText().equals("bank") && textField1.getText().equals(adminBank.loginBank)) {
+            adminBank.controlLoginBank();
+        }
+        if (textField3.getText().equals("bank") && textField1.getText().equals(adminBank.passBank)) {
+            adminBank.controlPaswordBank();
+        }
+        if (textField3.getText().equals("ingr") && textField1.getText().equals(adminIngr.loginIngr)) {
+            adminIngr.controlLoginIngr();
+        }
+        if (textField3.getText().equals("ingr") && textField1.getText().equals(adminIngr.passIngr)) {
+            adminIngr.controlPaswordIngr();
+        }
     }
 
     private void button4ActionPerformed(ActionEvent e) {
+        this.e = e;
         addSugar();
     }
 
@@ -441,52 +495,98 @@ public class Gui extends JFrame {
     }
 
     private void button6ActionPerformed(ActionEvent e) {
+        this.e = e;
         menuMoney();
     }
 
     private void button7ActionPerformed(ActionEvent e) {
+        this.e = e;
         insertAddMoney();
     }
 
     private void button8ActionPerformed(ActionEvent e) {
+        this.e = e;
         iinsertSubtractMoney();
     }
 
     private void button9ActionPerformed(ActionEvent e) {
+        this.e = e;
+        if (textField1.getText().equals(menuList.get(0))) {
+            if (textField1.getText().equals(recipeCoffee.getName1())) {
+                sw1 = new SWorker1(this);
+                viewInsertMoney();
+                checkMoney.checkMoneyEspresso();
+                sw1.execute();
+            }
 
-        if (textField1.getText().equals(menuList.get(0)))
-            checkMoneyEspresso();
-        else if (textField1.getText().equals(menuList.get(1)))
-            checkMoneyAmericano();
-        else if (textField1.getText().equals(menuList.get(2)))
-            checkMoneyCappuccino();
+        } else if (textField1.getText().equals(recipeCoffee.getName2())) {
+            if (CheckMoney.moneycm < recipeCoffee.getPriseAmericano()) {
+                sw1 = new SWorker1(this);
+                viewInsertMoney();
+                checkMoney.checkMoneyAmericano();
+                sw1.execute();
+            }
+
+        } else if (textField1.getText().equals(recipeCoffee.getName3())) {
+            if (CheckMoney.moneycm < recipeCoffee.getPriseCappuccino()) {
+                sw1 = new SWorker1(this);
+                viewInsertMoney();
+                checkMoney.checkMoneyCappucino();
+                sw1.execute();
+            }
+        }
     }
 
     private void button10ActionPerformed(ActionEvent e) {
-        checkMoneyList.clear();
-        cancelOrder();
+        this.e = e;
+        sw = new SWorker(this);
+        sw.execute();
+        if (textField1.getText().equals(recipeCoffee.getName1()) ||
+                textField1.getText().equals(recipeCoffee.getName2()) ||
+                textField1.getText().equals(recipeCoffee.getName3())) {
+            cancelOrder();
+            viewOutMoney();
+        }
+        if (textField3.getText().equals("bank")) {
+            adminBank.takeMoney();
+        } else {
+            if (textField3.getText().equals("ingr")) {
+                adminIngr.addIngradient();
+            }
+        }
     }
 
     private void button11ActionPerformed(ActionEvent e) {
-
-        makeDrink();
+        this.e = e;
+        sw = new SWorker(this);
+        sw.execute();
+        if (textField3.getText().equals("bank")) {
+            adminBank.lookMoney();
+        } else {
+            if (textField3.getText().equals("ingr")) {
+                adminIngr.lookStockIngr();
+            } else if ((!textField3.getText().equals("bank")) || (!textField3.getText().equals("ingr"))) {
+                makeDrink();
+                viewCoffeeDrink();
+                sw.execute();
+            }
+        }
     }
 
-    private void list1ValueChanged(ListSelectionEvent e) {
-
+    public JTextField getTextField1() {
+        return textField1;
     }
 
     public JTextArea getTextArea1() {
         return textArea1;
     }
 
-    private void button9ItemStateChanged(ItemEvent e) {
-
+    public JTextField getTextField3() {
+        return textField3;
     }
 
     private void initComponents() {
-        // JFormDesigner - Component initialization - MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Nik Nik
+
         panel1 = new JPanel();
         panel2 = new JPanel();
         scrollPane1 = new JScrollPane();
@@ -512,8 +612,10 @@ public class Gui extends JFrame {
         button10 = new JButton();
         label4 = new JLabel();
         button11 = new JButton();
-        desktopPane2 = new JDesktopPane();
+        panel4 = new JPanel();
         label6 = new JLabel();
+        panel5 = new JPanel();
+        label7 = new JLabel();
 
         //======== this ========
         setFont(new Font("DialogInput", Font.PLAIN, 16));
@@ -527,19 +629,6 @@ public class Gui extends JFrame {
 
         //======== panel1 ========
         {
-
-            // JFormDesigner evaluation mark
-            panel1.setBorder(new javax.swing.border.CompoundBorder(
-                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                            "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-                            javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                            java.awt.Color.red), panel1.getBorder()));
-            panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-                public void propertyChange(java.beans.PropertyChangeEvent e) {
-                    if ("border".equals(e.getPropertyName())) throw new RuntimeException();
-                }
-            });
-
             panel1.setLayout(null);
 
             //======== panel2 ========
@@ -579,43 +668,44 @@ public class Gui extends JFrame {
 
             //======== panel3 ========
             {
-                panel3.setBackground(new Color(204, 204, 204));
+                panel3.setBackground(new Color(204, 204, 255));
                 panel3.setLayout(null);
 
                 //---- button1 ----
                 button1.setText("+");
                 button1.addActionListener(e -> button1ActionPerformed(e));
                 panel3.add(button1);
-                button1.setBounds(new Rectangle(new Point(20, 30), button1.getPreferredSize()));
+                button1.setBounds(new Rectangle(new Point(15, 30), button1.getPreferredSize()));
 
                 //---- button2 ----
                 button2.setText("-");
                 button2.addActionListener(e -> button2ActionPerformed(e));
                 panel3.add(button2);
-                button2.setBounds(new Rectangle(new Point(60, 30), button2.getPreferredSize()));
+                button2.setBounds(new Rectangle(new Point(55, 30), button2.getPreferredSize()));
 
                 //---- button3 ----
                 button3.setText(">");
                 button3.addActionListener(e -> button3ActionPerformed(e));
                 panel3.add(button3);
-                button3.setBounds(new Rectangle(new Point(180, 30), button3.getPreferredSize()));
+                button3.setBounds(new Rectangle(new Point(185, 30), button3.getPreferredSize()));
 
                 //---- label5 ----
                 label5.setText("Menu");
                 label5.setFont(new Font("Dialog", Font.BOLD, 16));
+                label5.setForeground(new Color(204, 102, 0));
                 panel3.add(label5);
                 label5.setBounds(new Rectangle(new Point(15, 5), label5.getPreferredSize()));
 
                 //---- label1 ----
                 label1.setText("coffee drink");
-                label1.setForeground(new Color(153, 102, 0));
+                label1.setForeground(new Color(255, 153, 0));
                 panel3.add(label1);
                 label1.setBounds(105, 10, 70, 20);
 
                 //---- textField1 ----
                 textField1.setText("Espresso");
-                textField1.setBackground(new Color(0, 0, 153));
-                textField1.setForeground(new Color(255, 153, 102));
+                textField1.setBackground(new Color(0, 0, 102));
+                textField1.setForeground(Color.green);
                 textField1.setFont(new Font("sansserif", Font.PLAIN, 14));
                 panel3.add(textField1);
                 textField1.setBounds(100, 30, 80, 25);
@@ -624,47 +714,47 @@ public class Gui extends JFrame {
                 button4.setText("+");
                 button4.addActionListener(e -> button4ActionPerformed(e));
                 panel3.add(button4);
-                button4.setBounds(new Rectangle(new Point(20, 60), button4.getPreferredSize()));
+                button4.setBounds(new Rectangle(new Point(15, 60), button4.getPreferredSize()));
 
                 //---- button5 ----
                 button5.setText("-");
                 button5.addActionListener(e -> button5ActionPerformed(e));
                 panel3.add(button5);
-                button5.setBounds(new Rectangle(new Point(60, 60), button5.getPreferredSize()));
+                button5.setBounds(new Rectangle(new Point(55, 60), button5.getPreferredSize()));
 
                 //---- textField2 ----
                 textField2.setSelectedTextColor(new Color(0, 0, 51));
-                textField2.setBackground(new Color(0, 0, 102));
-                textField2.setForeground(Color.yellow);
+                textField2.setForeground(Color.green);
                 textField2.setFont(textField2.getFont().deriveFont(textField2.getFont().getSize() + 6f));
                 textField2.setText("0");
                 textField2.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+                textField2.setBackground(new Color(0, 0, 102));
                 panel3.add(textField2);
-                textField2.setBounds(100, 55, 35, 30);
+                textField2.setBounds(100, 60, 45, 30);
 
                 //---- label2 ----
                 label2.setText("sugar");
                 label2.setForeground(new Color(51, 51, 51));
                 panel3.add(label2);
-                label2.setBounds(new Rectangle(new Point(140, 60), label2.getPreferredSize()));
+                label2.setBounds(new Rectangle(new Point(150, 65), label2.getPreferredSize()));
 
                 //---- button6 ----
                 button6.setText(">");
                 button6.addActionListener(e -> button6ActionPerformed(e));
                 panel3.add(button6);
-                button6.setBounds(new Rectangle(new Point(180, 60), button6.getPreferredSize()));
+                button6.setBounds(new Rectangle(new Point(185, 60), button6.getPreferredSize()));
 
                 //---- button7 ----
                 button7.setText("+");
                 button7.addActionListener(e -> button7ActionPerformed(e));
                 panel3.add(button7);
-                button7.setBounds(new Rectangle(new Point(20, 90), button7.getPreferredSize()));
+                button7.setBounds(new Rectangle(new Point(15, 90), button7.getPreferredSize()));
 
                 //---- button8 ----
                 button8.setText("-");
                 button8.addActionListener(e -> button8ActionPerformed(e));
                 panel3.add(button8);
-                button8.setBounds(new Rectangle(new Point(60, 90), button8.getPreferredSize()));
+                button8.setBounds(new Rectangle(new Point(55, 90), button8.getPreferredSize()));
 
                 //---- textField3 ----
                 textField3.setBackground(new Color(0, 0, 102));
@@ -674,23 +764,23 @@ public class Gui extends JFrame {
                 textField3.setColumns(10);
                 textField3.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
                 panel3.add(textField3);
-                textField3.setBounds(100, 90, 35, 30);
+                textField3.setBounds(100, 90, 45, 30);
 
                 //---- label3 ----
                 label3.setText("money");
-                label3.setForeground(new Color(0, 153, 102));
+                label3.setForeground(new Color(51, 51, 51));
                 panel3.add(label3);
-                label3.setBounds(new Rectangle(new Point(140, 95), label3.getPreferredSize()));
+                label3.setBounds(145, 95, 42, label3.getPreferredSize().height);
 
                 //---- button9 ----
                 button9.setText(">");
                 button9.addActionListener(e -> button9ActionPerformed(e));
-                button9.addItemListener(e -> button9ItemStateChanged(e));
                 panel3.add(button9);
-                button9.setBounds(new Rectangle(new Point(180, 90), button9.getPreferredSize()));
+                button9.setBounds(new Rectangle(new Point(185, 90), button9.getPreferredSize()));
 
                 //---- button10 ----
                 button10.setText("Yes");
+                button10.setFont(new Font("sansserif", Font.PLAIN, 11));
                 button10.addActionListener(e -> button10ActionPerformed(e));
                 panel3.add(button10);
                 button10.setBounds(new Rectangle(new Point(40, 120), button10.getPreferredSize()));
@@ -698,13 +788,14 @@ public class Gui extends JFrame {
                 //---- label4 ----
                 label4.setText("   order");
                 panel3.add(label4);
-                label4.setBounds(95, 125, 45, label4.getPreferredSize().height);
+                label4.setBounds(110, 125, 45, label4.getPreferredSize().height);
 
                 //---- button11 ----
-                button11.setText("Non");
+                button11.setText("No");
+                button11.setFont(new Font("sansserif", Font.PLAIN, 11));
                 button11.addActionListener(e -> button11ActionPerformed(e));
                 panel3.add(button11);
-                button11.setBounds(new Rectangle(new Point(150, 120), button11.getPreferredSize()));
+                button11.setBounds(new Rectangle(new Point(180, 120), button11.getPreferredSize()));
 
                 { // compute preferred size
                     Dimension preferredSize = new Dimension();
@@ -722,10 +813,63 @@ public class Gui extends JFrame {
             }
             panel1.add(panel3);
             panel3.setBounds(235, 0, 235, 160);
-            panel1.add(desktopPane2);
-            desktopPane2.setBounds(235, 160, 235, 250);
-            panel1.add(label6);
-            label6.setBounds(0, 160, 235, 250);
+
+            //======== panel4 ========
+            {
+                panel4.setLayout(null);
+
+                //---- label6 ----
+                label6.setIcon(new ImageIcon("D:\\IntelliJIDEA\\coffeeMachineGui\\out\\production\\coffeeMachineGui\\images\\FALL.jpg"));
+                label6.setOpaque(true);
+                panel4.add(label6);
+                label6.setBounds(0, 0, 235, 250);
+
+                { // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for (int i = 0; i < panel4.getComponentCount(); i++) {
+                        Rectangle bounds = panel4.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel4.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel4.setMinimumSize(preferredSize);
+                    panel4.setPreferredSize(preferredSize);
+                }
+            }
+            panel1.add(panel4);
+            panel4.setBounds(0, 160, 235, 250);
+
+            //======== panel5 ========
+            {
+                panel5.setAutoscrolls(true);
+                panel5.setLayout(null);
+
+                //---- label7 ----
+                label7.setBackground(new Color(153, 153, 153));
+                label7.setIcon(new ImageIcon("D:\\IntelliJIDEA\\coffeeMachineGui\\out\\production\\coffeeMachineGui\\images\\MONEY.jpg"));
+                label7.setOpaque(true);
+                label7.setForeground(new Color(178, 60, 22));
+                panel5.add(label7);
+                label7.setBounds(0, 0, label7.getPreferredSize().width, 250);
+
+                { // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for (int i = 0; i < panel5.getComponentCount(); i++) {
+                        Rectangle bounds = panel5.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel5.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel5.setMinimumSize(preferredSize);
+                    panel5.setPreferredSize(preferredSize);
+                }
+            }
+            panel1.add(panel5);
+            panel5.setBounds(235, 160, 235, 250);
 
             { // compute preferred size
                 Dimension preferredSize = new Dimension();
@@ -744,11 +888,8 @@ public class Gui extends JFrame {
         contentPane.add(panel1);
         setSize(485, 450);
         setLocationRelativeTo(null);
-        // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
-    // JFormDesigner - Variables declaration -  MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Nik Nik
     private JPanel panel1;
     private JPanel panel2;
     private JScrollPane scrollPane1;
@@ -771,12 +912,13 @@ public class Gui extends JFrame {
     JTextField textField3;
     private JLabel label3;
     JButton button9;
-    private JButton button10;
+    protected JButton button10;
     private JLabel label4;
-    private JButton button11;
-    private JDesktopPane desktopPane2;
+    protected JButton button11;
+    private JPanel panel4;
     private JLabel label6;
-    // JFormDesigner - End of variables declaration  //GEN-END:variables
+    private JPanel panel5;
+    private JLabel label7;
 
     public void start() {
         EventQueue.invokeLater(() -> {
@@ -790,6 +932,4 @@ public class Gui extends JFrame {
             }
         });
     }
-
 }
-

@@ -5,19 +5,16 @@ public class CheckMoney {
     static List<Integer> checkMoneyList = new ArrayList<>();
     private Gui gui;
     private RecipeCoffee rc = new RecipeCoffee(this);
-    int moneycm;
+    static int moneycm = 0;
     int money;
-    int cost = 0;
-
     static int change;
+    static int bad = 1;
 
     public CheckMoney(Gui checkMoney) {
         this.gui = checkMoney;
     }
 
-    void checkMoneyEspresso() {
-//
-        gui.viewInsertMoney();
+    int checkMoneyEspresso() {
         money = Integer.parseInt(gui.getTextField3().getText());
         if (money == 1 || money == 2 || money == 5 || money == 10) {
             moneycm = money;
@@ -28,21 +25,19 @@ public class CheckMoney {
             }
             moneycm = sum;
             if (moneycm < rc.getPriseEspresso()) {
-                gui.checkAddMoney();
+                bad = 1;
             }
         } else {
-            gui.checkBadMoney();
+            bad = 0;
         }
         if (moneycm >= rc.getPriseEspresso()) {
             change = moneycm - rc.getPriseEspresso();
-            gui.getTextArea1().setText(" You put: " + moneycm + "$\n" + " Enough money for: " +
-                    rc.getName1() + "-" + rc.getPriseEspresso() + "$\n\n");
-            gui.chooseOrder();
+            bad = 2;
         }
+        return bad;
     }
 
     void checkMoneyAmericano() {
-        gui.viewInsertMoney();
         money = Integer.parseInt(gui.getTextField3().getText());
         if (money == 1 || money == 2 || money == 5 || money == 10) {
             moneycm = money;
@@ -53,21 +48,18 @@ public class CheckMoney {
             }
             moneycm = sum;
             if (moneycm < rc.getPriseAmericano()) {
-                gui.checkAddMoney();
+                bad = 1;
             }
         } else {
-            gui.checkBadMoney();
+            bad = 0;
         }
-        if (moneycm >= gui.recipeCoffee.getPriseAmericano()) {
+        if (moneycm >= rc.getPriseAmericano()) {
             change = moneycm - rc.getPriseAmericano();
-            gui.getTextArea1().setText("You put: " + moneycm + "$\n" + "Enough money for: " +
-                    rc.getName2() + "-" + rc.getPriseAmericano() + "$\n\n");
-            gui.chooseOrder();
+            bad = 2;
         }
     }
 
     void checkMoneyCappucino() {
-        gui.viewInsertMoney();
         money = Integer.parseInt(gui.getTextField3().getText());
         if (money == 1 || money == 2 || money == 5 || money == 10) {
             moneycm = money;
@@ -78,31 +70,27 @@ public class CheckMoney {
             }
             moneycm = sum;
             if (moneycm < rc.getPriseCappuccino()) {
-                gui.checkAddMoney();
+                bad = 1;
             }
         } else {
-            gui.checkBadMoney();
+            bad = 0;
         }
         if (moneycm >= rc.getPriseCappuccino()) {
             change = moneycm - rc.getPriseCappuccino();
-            gui.getTextArea1().setText("You put: " + moneycm + "$\n" + "Enough money for: " +
-                    rc.getName3() + "-" + rc.getPriseCappuccino() + "$\n\n");
-            gui.chooseOrder();
+            bad = 2;
         }
     }
 
     void takeChange() {
 
-        if (change!= 0) {
-            //           System.out.println("change- " + getChange());
+        if (change != 0) {
             gui.getTextArea1().setText(" Preparing drink: " + rc.getName() + "\n" +
                     " coffee- " + Ingredients.getCoffee() + " water-" + Ingredients.getWater() +
                     " cost-" + rc.getPrise() + "$\n" +
                     " coffee ready with sugar-" + Ingredients.getSugar() + "\n You put: " + moneycm + "$\n" +
                     " Enough money for: " + rc.getName() + "-" + rc.getPrise() + "$\n" +
-                    " Take the change: " +change + " $\n\n");
+                    " Take the change: " + change + " $\n\n");
             gui.viewOutMoney();
         }
     }
-
 }

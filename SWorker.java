@@ -2,32 +2,19 @@ import javax.swing.*;
 
 public class SWorker extends SwingWorker<Object, Object> {
 
-    Gui gui;
-//AdminIngradient adminIngr;
-//    private List<Object> chunks;
+    private Gui gui;
 
-    public SWorker(Gui sworker) {
+    SWorker(Gui sworker) {
         this.gui = sworker;
     }
-//    public SWorker(AdminIngradient sworker) {
-//        this.adminIngr = sworker;
-//    }
-
 
     @Override
     protected Object doInBackground() throws Exception {
-        for (int i = 0; i < 5; i++) {
-            Thread.sleep(1050);
+        for (int i = 1; i < 6; i++) {
+            Thread.sleep(1090);
         }
         return null;
     }
-
-//    @Override
-//    protected void process(List<Object> chunks) {
-//        this.chunks = chunks;
-//        super.process(chunks);
-//        gui.viewCoffeeDrink();
-//    }
 
     @Override
     protected void done() {

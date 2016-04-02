@@ -1,114 +1,96 @@
-/**
- * Created by mi on 14.03.2016.
- */
-//import static coffeeMachineGui.Ingredients.*;
 
 public class RecipeCoffee {
 
     private Gui gui;
-    private String name = " ";
+    private CheckMoney checkMoney;
+    private static String name = " ";
     private String name1;
     private String name2;
     private String name3;
     private int priseAmericano;
     private int priseEspresso;
     private int priseCappuccino;
-
-    Ingredients ingr = new Ingredients();
+    private static int prise;
     private int cost = 0;
 
-    public RecipeCoffee(Gui recipeCoffee) {
+    RecipeCoffee(Gui recipeCoffee) {
         this.gui = recipeCoffee;
-        //       this.gui = selectSugar;
         name = " ";
         name1 = "Espresso";
         name2 = "Americano";
         name3 = "Cappuccino";
-
+        prise = 0;
         priseEspresso = 5;
         priseAmericano = 7;
         priseCappuccino = 9;
     }
 
-    public RecipeCoffee() {
-
+    RecipeCoffee(CheckMoney checkMoney) {
+        this.checkMoney = checkMoney;
+        name = " ";
+        name1 = "Espresso";
+        name2 = "Americano";
+        name3 = "Cappuccino";
+        prise = 0;
+        priseEspresso = 5;
+        priseAmericano = 7;
+        priseCappuccino = 9;
     }
 
-
-    void selectSugar(String name) {
-
-        if (ingr.getSugar() > 0) {
-            System.out.println(" coffee- " + ingr.getCoffee() + " water-" +
-                    ingr.getWater() + " cost-" + getCost() + "$" + " coffee ready with sugar-" + ingr.getSugar());
-
+    private void selectSugar(String name) {
+        if (Ingredients.getSugar() > 0) {
             gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
-                    " coffee- " + ingr.getCoffee() + " water-" +
-                    ingr.getWater() + " cost-" + getCost() + "$\n" + " coffee ready with sugar-" + ingr.getSugar()+ "\n\n");
+                    " coffee- " + Ingredients.getCoffee() + " water-" +
+                    Ingredients.getWater() + " cost-" + getCost() + "$\n" + " coffee ready with sugar-" +
+                    Ingredients.getSugar() + "\n\n");
 
-        }else {
-            if (ingr.getSugar() == 0) {
-                System.out.println(" coffee- " + ingr.getCoffee() + " water-" +
-                        ingr.getWater() + " cost-" + getCost() + "$" + " coffee ready sugarless");
+        } else {
+            if (Ingredients.getSugar() == 0) {
                 gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
-                        " coffee- " + ingr.getCoffee() + " water-" +
-                        ingr.getWater() + " cost-" + getCost() + "$\n" + " coffee ready sugarless\n\n");
+                        " coffee- " + Ingredients.getCoffee() + " water-" +
+                        Ingredients.getWater() + " cost-" + getCost() + "$\n" + " coffee ready sugarless\n\n");
             }
         }
     }
 
-    void recipeEspresso(int coffee, int water, int sugar, int cost) {
-
-        name = name1;
+    void recipeEspresso(int coffee, int water, int sugar) {
+        name = setName(name1);
         int milk = 0;
+        cost = 0;
         Ingredients ingr = new Ingredients(coffee, water, milk, sugar);
-        ingr.setCoffee(7);
-        ingr.setWater(30);
-        ingr.setSugar(Gui.getSugar());
+        Ingredients.setCoffee(7);
+        Ingredients.setWater(30);
+        Ingredients.setSugar(Ingredients.getSugar());
         setCost(5);
-//        System.out.println("Preparing drink: " + getName1());
-//        System.out.println("sugar_gui " + sugar);
-//        System.out.println("sugar_ing " + getSugar());
+        prise = setPrise(priseCappuccino);
         selectSugar(name);
         ingr.takeIngredientsStock();
-
     }
 
-    public int recipeAmericano(int coffee, int water, int sugar, int cost) {
-        name = name2;
+    void recipeAmericano(int coffee, int water, int sugar) {
+        name = setName(name2);
         int milk = 0;
         Ingredients ingr = new Ingredients(coffee, water, milk, sugar);
-        ingr.setCoffee(7);
-        ingr.setWater(100);
-        ingr.setSugar(ingr.getSugar());
+        Ingredients.setCoffee(7);
+        Ingredients.setWater(100);
+        Ingredients.setSugar(Ingredients.getSugar());
         setCost(7);
+        prise = setPrise(priseAmericano);
         selectSugar(name);
         ingr.takeIngredientsStock();
-        return 0;
     }
 
-    public int recipeCappuccino(int coffee, int water, int milk, int sugar, int cost) {
-        name = name3;
+    void recipeCappuccino(int coffee, int water, int milk, int sugar) {
+        name = setName(name3);
         Ingredients ingr = new Ingredients(coffee, water, milk, sugar);
-        ingr.setCoffee(7);
-        ingr.setWater(30);
-        ingr.setMilk(70);
-        ingr.setSugar(ingr.getSugar());
+        Ingredients.setCoffee(7);
+        Ingredients.setWater(30);
+        Ingredients.setMilk(70);
+        Ingredients.setSugar(Ingredients.getSugar());
         setCost(9);
+        prise = setPrise(priseCappuccino);
         selectSugar(name);
         ingr.takeIngredientsStock();
-        return 0;
-    }
-
-    public int getEspresso() {
-        return 5;
-    }
-
-    public int getAmericano() {
-        return 7;
-    }
-
-    public int getCappuccino() {
-        return 9;
     }
 
     public int getCost() {
@@ -139,25 +121,26 @@ public class RecipeCoffee {
         return priseAmericano;
     }
 
-    public void setPriseAmericano(int priseAmericano) {
-        this.priseAmericano = priseAmericano;
-    }
-
     public int getPriseEspresso() {
         return priseEspresso;
-    }
-
-    public void setPriseEspresso(int priseEspresso) {
-        this.priseEspresso = priseEspresso;
     }
 
     public int getPriseCappuccino() {
         return priseCappuccino;
     }
 
-    public void setPriseCappuccino(int priseCappucino) {
-        this.priseCappuccino = priseCappucino;
+    public int getPrise() {
+        return prise;
     }
 
+    public static String setName(String name) {
+        RecipeCoffee.name = name;
+        return name;
+    }
+
+    public static int setPrise(int prise) {
+        RecipeCoffee.prise = prise;
+        return prise;
+    }
 }
 

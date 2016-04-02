@@ -1,30 +1,25 @@
-/**
- * Created by mi on 14.03.2016.
- */
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Bank {
 
-    static List<Integer> bankList = new ArrayList<Integer>();
+    static List<Integer> bankList = new ArrayList<>();
     private Gui gui;
-    MenuCoffee menuCoffee = new MenuCoffee(this);
     private int bankAll;
     private int bankMin = 10;
-    private int bankMax = 20;
+    private int bankMax = 29;
     int bank;
     static int b;
 
-    public Bank(Gui bank) {
+    Bank(Gui bank) {
         this.gui = bank;
     }
 
-    public Bank() {
+    Bank() {
     }
 
     int checkBank() {
-
         if (!bankList.isEmpty()) {
             int sum = 0;
             for (Integer bn : bankList) {
@@ -34,18 +29,14 @@ public class Bank {
             setBankAll(sum);
 
             if (getBankAll() >= getBankMax()) {
-                System.out.println("The Bank is full!!!");
-                //     gui.getTextArea1().setText("The Bank is full!!!");gui.getTextArea1().append(Arrays.toString(gui.crowdedBankItem));
-                gui.getTextArea1().append(Arrays.toString(gui.crowdedBankItem));
-            }
-            b = 1;
-        } else
-            b = 0;
+                b = 1;
+            } else
+                b = 0;
+        }
         return b;
     }
 
-
-    public int putBank(int cost) {
+    int putBank(int cost) {
         if (bankList.isEmpty()) {
             bankList.add(getBankMin());
         }
@@ -56,7 +47,6 @@ public class Bank {
         }
         bank = sum;
         setBankAll(bank);
-        System.out.println("bank " + bank);
         return cost;
     }
 
