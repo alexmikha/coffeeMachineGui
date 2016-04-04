@@ -15,32 +15,31 @@ public class Gui extends JFrame {
     private List<String> moneyList = new ArrayList<>();
     private List<String> sugarList = new ArrayList<>();
     private List<String> menuList = new ArrayList<>();
-    RecipeCoffee recipeCoffee = new RecipeCoffee(this);
-    CheckMoney checkMoney = new CheckMoney(this);
-    Ingredients ingr = new Ingredients(this);
-    AdminBank adminBank = new AdminBank(this);
-    AdminIngradient adminIngr = new AdminIngradient(this);
+    private RecipeCoffee recipeCoffee = new RecipeCoffee(this);
+    private CheckMoney checkMoney = new CheckMoney(this);
+    private Ingredients ingr = new Ingredients();
+    private AdminBank adminBank = new AdminBank(this);
+    private AdminIngradient adminIngr = new AdminIngradient(this);
 
-    Bank bank = new Bank(this);
-    SWorker sw = new SWorker(this);
-    SWorker1 sw1 = new SWorker1(this);
-    int money;
-    static int sugar;
-    private int moneyBad = 0;
+    private Bank bank = new Bank();
+    private SWorker sw = new SWorker(this);
+    private final ThreadLocal<SWorker1> sw1 = new ThreadLocal<>();
+    private int sugarGui;
+    private int moneyBad;
     private int moneyCancel = 0;
     private ImageIcon imageIcon6;
     private ImageIcon imageIcon7;
     private ImageIcon imageIcon8;
     private ImageIcon imageIcon9;
     private ImageIcon imageIcon10;
-    private ActionEvent e;
 
-    static int getSugar() {
-        return sugar;
+
+    private int getSugarGui() {
+        return sugarGui;
     }
 
-    static void setSugar(int sugar) {
-        Gui.sugar = sugar;
+    private void setSugarGui(int sugarGui) {
+        this.sugarGui = sugarGui;
     }
 
     private String[] menuItem = {"Please select the drink:\n" + " Espresso    prise 5$\n" + " Americano   prise 7$\n" + " Cappuccino  prise 9&\n\n"};
@@ -53,10 +52,6 @@ public class Gui extends JFrame {
 
     private ThreadLocal<String[]> cancelOrderItem;
 
-    private ThreadLocal<String[]> takeChangeItem;
-
-    private ThreadLocal<String[]> takeBadMoneyItem;
-
     public Gui() {
         super();
         initComponents();
@@ -68,28 +63,12 @@ public class Gui extends JFrame {
         imageIcon8 = new ImageIcon(getClass().getResource("/images/Money_out_new.gif"));
         imageIcon9 = new ImageIcon(getClass().getResource("/images/FALL.jpg"));
         imageIcon10 = new ImageIcon(getClass().getResource("/images/MONEY.jpg"));
-
-        takeBadMoneyItem = new ThreadLocal<String[]>() {
-            @Override
-            protected String[] initialValue() {
-                return new String[]{" Introduced not correct money\n", " Take this money " + money + "$\n",
-                        " Take this money " + moneyBad + "$\n\n"};
-            }
-        };
-
-        takeChangeItem = new ThreadLocal<String[]>() {
-            @Override
-            protected String[] initialValue() {
-                return new String[]{" Take the change: " + CheckMoney.change + " $\n\n"};
-            }
-        };
-
+        moneyBad = 0;
         cancelOrderItem = new ThreadLocal<String[]>() {
             @Override
             protected String[] initialValue() {
-                return new String[]{" Take Your the money: " + checkMoney.checkMoneyList + " $\n" + "All money: " + moneyCancel +
+                return new String[]{" Take Your the money: " + CheckMoney.checkMoneyList + " $\n" + "All money: " + moneyCancel +
                         " $\n" + " Come again\n\n"};
-
             }
         };
     }
@@ -146,7 +125,7 @@ public class Gui extends JFrame {
         ingr.checkIngradients();
         bank.checkBank();
         int a = Ingredients.a;
-        int b = Bank.b;
+        //       int b = Bank.b;
         if (a == 0) {
             unlockControl();
         }
@@ -159,7 +138,7 @@ public class Gui extends JFrame {
     void crowdedBank() {
         bank.checkBank();
         ingr.checkIngradients();
-        int a = Ingredients.a;
+        //       int a = Ingredients.a;
         int b = Bank.b;
         if (b == 0) {
             unlockControl();
@@ -199,7 +178,7 @@ public class Gui extends JFrame {
         ingr.checkIngradients();
         int a = Ingredients.a;
         int b = Bank.b;
-        if ((a == 1) || (b == 1) || (a == 0 && b == 1) || (a == 1 && b == 0)) {
+        if (a == 1 || b == 1) {
             button1.setEnabled(false);
             button2.setEnabled(false);
             button3.setEnabled(true);
@@ -231,19 +210,19 @@ public class Gui extends JFrame {
 
     private void makeDrink() {
         if (textField1.getText().equals(menuList.get(0)))
-            recipeCoffee.recipeEspresso(7, 30, sugar);
+            recipeCoffee.recipeEspresso(7, 30, sugarGui);
         else if (textField1.getText().equals(menuList.get(1)))
-            recipeCoffee.recipeAmericano(7, 100, sugar);
+            recipeCoffee.recipeAmericano(7, 100, sugarGui);
         else if (textField1.getText().equals(menuList.get(2)))
-            recipeCoffee.recipeCappuccino(7, 30, 70, sugar);
+            recipeCoffee.recipeCappuccino(7, 30, 70, sugarGui);
         bank.putBank(recipeCoffee.getCost());
         checkMoney.takeChange();
         checkIngBank();
-        checkMoney.checkMoneyList.clear();
+        CheckMoney.checkMoneyList.clear();
     }
 
     void selectDrink() {
-        checkMoney.checkMoneyList.clear();
+        CheckMoney.checkMoneyList.clear();
         CheckMoney.moneycm = 0;
         bank.checkBank();
         ingr.checkIngradients();
@@ -298,8 +277,8 @@ public class Gui extends JFrame {
             textField2.setText("3");
         else if (sugarList.get(3).equals(textField2.getText()))
             textField2.setText("4");
-        setSugar(Integer.parseInt(textField2.getText()));
-        Ingredients.setSugar(getSugar());
+        setSugarGui(Integer.parseInt(textField2.getText()));
+        Ingredients.setSugar(getSugarGui());
     }
 
     private void minusSugar() {
@@ -315,8 +294,8 @@ public class Gui extends JFrame {
             textField2.setText("1");
         else if (sugarList.get(1).equals(textField2.getText()))
             textField2.setText("0");
-        setSugar(Integer.parseInt(textField2.getText()));
-        Ingredients.setSugar(getSugar());
+        setSugarGui(Integer.parseInt(textField2.getText()));
+        Ingredients.setSugar(getSugarGui());
     }
 
     private void menuMoney() {
@@ -372,11 +351,11 @@ public class Gui extends JFrame {
             textField3.setText("1");
     }
 
-    void chooseOrder() {
+    private void chooseOrder() {
         textArea1.append(Arrays.toString(chooseOrderItem));
     }
 
-    void cancelOrder() {
+    private void cancelOrder() {
         int sum = 0;
         for (Integer i : CheckMoney.checkMoneyList) {
             sum = sum + i;
@@ -396,7 +375,7 @@ public class Gui extends JFrame {
 
     boolean takeBadMoney() {
         sw = new SWorker(this);
-        money = Integer.parseInt(textField3.getText());
+        int money = Integer.parseInt(textField3.getText());
         int sum = 0;
         for (Integer mon : CheckMoney.checkMoneyList) {
             sum = sum + mon;
@@ -454,17 +433,14 @@ public class Gui extends JFrame {
     }
 
     private void button1ActionPerformed(ActionEvent e) {
-        this.e = e;
         selectAddRecipe();
     }
 
     private void button2ActionPerformed(ActionEvent e) {
-        this.e = e;
         selesctMinusRecipe();
     }
 
     private void button3ActionPerformed(ActionEvent e) {
-        this.e = e;
         if (textField1.getText().equals(recipeCoffee.getName1()) ||
                 textField1.getText().equals(recipeCoffee.getName2()) ||
                 textField1.getText().equals(recipeCoffee.getName3())) {
@@ -485,60 +461,53 @@ public class Gui extends JFrame {
     }
 
     private void button4ActionPerformed(ActionEvent e) {
-        this.e = e;
         addSugar();
     }
 
     private void button5ActionPerformed(ActionEvent e) {
-        this.e = e;
         minusSugar();
     }
 
     private void button6ActionPerformed(ActionEvent e) {
-        this.e = e;
         menuMoney();
     }
 
     private void button7ActionPerformed(ActionEvent e) {
-        this.e = e;
         insertAddMoney();
     }
 
     private void button8ActionPerformed(ActionEvent e) {
-        this.e = e;
         iinsertSubtractMoney();
     }
 
     private void button9ActionPerformed(ActionEvent e) {
-        this.e = e;
         if (textField1.getText().equals(menuList.get(0))) {
             if (textField1.getText().equals(recipeCoffee.getName1())) {
-                sw1 = new SWorker1(this);
+                sw1.set(new SWorker1(this));
                 viewInsertMoney();
                 checkMoney.checkMoneyEspresso();
-                sw1.execute();
+                sw1.get().execute();
             }
 
         } else if (textField1.getText().equals(recipeCoffee.getName2())) {
             if (CheckMoney.moneycm < recipeCoffee.getPriseAmericano()) {
-                sw1 = new SWorker1(this);
+                sw1.set(new SWorker1(this));
                 viewInsertMoney();
                 checkMoney.checkMoneyAmericano();
-                sw1.execute();
+                sw1.get().execute();
             }
 
         } else if (textField1.getText().equals(recipeCoffee.getName3())) {
             if (CheckMoney.moneycm < recipeCoffee.getPriseCappuccino()) {
-                sw1 = new SWorker1(this);
+                sw1.set(new SWorker1(this));
                 viewInsertMoney();
                 checkMoney.checkMoneyCappucino();
-                sw1.execute();
+                sw1.get().execute();
             }
         }
     }
 
     private void button10ActionPerformed(ActionEvent e) {
-        this.e = e;
         sw = new SWorker(this);
         sw.execute();
         if (textField1.getText().equals(recipeCoffee.getName1()) ||
@@ -557,7 +526,6 @@ public class Gui extends JFrame {
     }
 
     private void button11ActionPerformed(ActionEvent e) {
-        this.e = e;
         sw = new SWorker(this);
         sw.execute();
         if (textField3.getText().equals("bank")) {
@@ -573,45 +541,45 @@ public class Gui extends JFrame {
         }
     }
 
-    public JTextField getTextField1() {
+    JTextField getTextField1() {
         return textField1;
     }
 
-    public JTextArea getTextArea1() {
+    JTextArea getTextArea1() {
         return textArea1;
     }
 
-    public JTextField getTextField3() {
+    JTextField getTextField3() {
         return textField3;
     }
 
     private void initComponents() {
 
-        panel1 = new JPanel();
-        panel2 = new JPanel();
-        scrollPane1 = new JScrollPane();
-        scrollPane2 = new JScrollPane();
+        JPanel panel1 = new JPanel();
+        JPanel panel2 = new JPanel();
+        JScrollPane scrollPane1 = new JScrollPane();
+        JScrollPane scrollPane2 = new JScrollPane();
         textArea1 = new JTextArea();
-        panel3 = new JPanel();
+        JPanel panel3 = new JPanel();
         button1 = new JButton();
         button2 = new JButton();
         button3 = new JButton();
-        label5 = new JLabel();
-        label1 = new JLabel();
-        textField1 = new JTextField();
         button4 = new JButton();
         button5 = new JButton();
-        textField2 = new JTextField();
-        label2 = new JLabel();
         button6 = new JButton();
         button7 = new JButton();
         button8 = new JButton();
-        textField3 = new JTextField();
-        label3 = new JLabel();
         button9 = new JButton();
         button10 = new JButton();
-        label4 = new JLabel();
         button11 = new JButton();
+        textField1 = new JTextField();
+        textField2 = new JTextField();
+        textField3 = new JTextField();
+        JLabel label1 = new JLabel();
+        JLabel label2 = new JLabel();
+        JLabel label3 = new JLabel();
+        JLabel label4 = new JLabel();
+        JLabel label5 = new JLabel();
         panel4 = new JPanel();
         label6 = new JLabel();
         panel5 = new JPanel();
@@ -673,19 +641,19 @@ public class Gui extends JFrame {
 
                 //---- button1 ----
                 button1.setText("+");
-                button1.addActionListener(e -> button1ActionPerformed(e));
+                button1.addActionListener(this::button1ActionPerformed);
                 panel3.add(button1);
                 button1.setBounds(new Rectangle(new Point(15, 30), button1.getPreferredSize()));
 
                 //---- button2 ----
                 button2.setText("-");
-                button2.addActionListener(e -> button2ActionPerformed(e));
+                button2.addActionListener(this::button2ActionPerformed);
                 panel3.add(button2);
                 button2.setBounds(new Rectangle(new Point(55, 30), button2.getPreferredSize()));
 
                 //---- button3 ----
                 button3.setText(">");
-                button3.addActionListener(e -> button3ActionPerformed(e));
+                button3.addActionListener(this::button3ActionPerformed);
                 panel3.add(button3);
                 button3.setBounds(new Rectangle(new Point(185, 30), button3.getPreferredSize()));
 
@@ -712,13 +680,13 @@ public class Gui extends JFrame {
 
                 //---- button4 ----
                 button4.setText("+");
-                button4.addActionListener(e -> button4ActionPerformed(e));
+                button4.addActionListener(this::button4ActionPerformed);
                 panel3.add(button4);
                 button4.setBounds(new Rectangle(new Point(15, 60), button4.getPreferredSize()));
 
                 //---- button5 ----
                 button5.setText("-");
-                button5.addActionListener(e -> button5ActionPerformed(e));
+                button5.addActionListener(this::button5ActionPerformed);
                 panel3.add(button5);
                 button5.setBounds(new Rectangle(new Point(55, 60), button5.getPreferredSize()));
 
@@ -740,19 +708,19 @@ public class Gui extends JFrame {
 
                 //---- button6 ----
                 button6.setText(">");
-                button6.addActionListener(e -> button6ActionPerformed(e));
+                button6.addActionListener(this::button6ActionPerformed);
                 panel3.add(button6);
                 button6.setBounds(new Rectangle(new Point(185, 60), button6.getPreferredSize()));
 
                 //---- button7 ----
                 button7.setText("+");
-                button7.addActionListener(e -> button7ActionPerformed(e));
+                button7.addActionListener(this::button7ActionPerformed);
                 panel3.add(button7);
                 button7.setBounds(new Rectangle(new Point(15, 90), button7.getPreferredSize()));
 
                 //---- button8 ----
                 button8.setText("-");
-                button8.addActionListener(e -> button8ActionPerformed(e));
+                button8.addActionListener(this::button8ActionPerformed);
                 panel3.add(button8);
                 button8.setBounds(new Rectangle(new Point(55, 90), button8.getPreferredSize()));
 
@@ -774,14 +742,14 @@ public class Gui extends JFrame {
 
                 //---- button9 ----
                 button9.setText(">");
-                button9.addActionListener(e -> button9ActionPerformed(e));
+                button9.addActionListener(this::button9ActionPerformed);
                 panel3.add(button9);
                 button9.setBounds(new Rectangle(new Point(185, 90), button9.getPreferredSize()));
 
                 //---- button10 ----
                 button10.setText("Yes");
                 button10.setFont(new Font("sansserif", Font.PLAIN, 11));
-                button10.addActionListener(e -> button10ActionPerformed(e));
+                button10.addActionListener(this::button10ActionPerformed);
                 panel3.add(button10);
                 button10.setBounds(new Rectangle(new Point(40, 120), button10.getPreferredSize()));
 
@@ -793,7 +761,7 @@ public class Gui extends JFrame {
                 //---- button11 ----
                 button11.setText("No");
                 button11.setFont(new Font("sansserif", Font.PLAIN, 11));
-                button11.addActionListener(e -> button11ActionPerformed(e));
+                button11.addActionListener(this::button11ActionPerformed);
                 panel3.add(button11);
                 button11.setBounds(new Rectangle(new Point(180, 120), button11.getPreferredSize()));
 
@@ -890,41 +858,31 @@ public class Gui extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private JPanel panel1;
-    private JPanel panel2;
-    private JScrollPane scrollPane1;
-    private JScrollPane scrollPane2;
-    private JTextArea textArea1;
-    private JPanel panel3;
     private JButton button1;
     private JButton button2;
     private JButton button3;
-    private JLabel label5;
-    private JLabel label1;
-    private JTextField textField1;
     private JButton button4;
     private JButton button5;
-    JTextField textField2;
-    private JLabel label2;
     private JButton button6;
-    JButton button7;
-    JButton button8;
-    JTextField textField3;
-    private JLabel label3;
-    JButton button9;
-    protected JButton button10;
-    private JLabel label4;
-    protected JButton button11;
+    private JButton button7;
+    private JButton button8;
+    private JButton button9;
+    JButton button10;
+    JButton button11;
+    private JTextArea textArea1;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
     private JPanel panel4;
     private JLabel label6;
     private JPanel panel5;
     private JLabel label7;
 
-    public void start() {
+    void start() {
         EventQueue.invokeLater(() -> {
             try {
                 Gui frame = new Gui();
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.pack();
                 frame.setVisible(true);
             } catch (Exception e) {

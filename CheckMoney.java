@@ -1,16 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckMoney {
+class CheckMoney {
     static List<Integer> checkMoneyList = new ArrayList<>();
     private Gui gui;
-    private RecipeCoffee rc = new RecipeCoffee(this);
+    private RecipeCoffee rc = new RecipeCoffee();
     static int moneycm = 0;
-    int money;
-    static int change;
+    private int money;
+    private static int change;
     static int bad = 1;
 
-    public CheckMoney(Gui checkMoney) {
+    CheckMoney(Gui checkMoney) {
         this.gui = checkMoney;
     }
 
@@ -37,7 +37,7 @@ public class CheckMoney {
         return bad;
     }
 
-    void checkMoneyAmericano() {
+    int checkMoneyAmericano() {
         money = Integer.parseInt(gui.getTextField3().getText());
         if (money == 1 || money == 2 || money == 5 || money == 10) {
             moneycm = money;
@@ -57,9 +57,10 @@ public class CheckMoney {
             change = moneycm - rc.getPriseAmericano();
             bad = 2;
         }
+        return bad;
     }
 
-    void checkMoneyCappucino() {
+    int checkMoneyCappucino() {
         money = Integer.parseInt(gui.getTextField3().getText());
         if (money == 1 || money == 2 || money == 5 || money == 10) {
             moneycm = money;
@@ -79,6 +80,7 @@ public class CheckMoney {
             change = moneycm - rc.getPriseCappuccino();
             bad = 2;
         }
+        return bad;
     }
 
     void takeChange() {

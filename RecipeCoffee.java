@@ -1,8 +1,7 @@
 
-public class RecipeCoffee {
+class RecipeCoffee {
 
     private Gui gui;
-    private CheckMoney checkMoney;
     private static String name = " ";
     private String name1;
     private String name2;
@@ -25,13 +24,7 @@ public class RecipeCoffee {
         priseCappuccino = 9;
     }
 
-    RecipeCoffee(CheckMoney checkMoney) {
-        this.checkMoney = checkMoney;
-        name = " ";
-        name1 = "Espresso";
-        name2 = "Americano";
-        name3 = "Cappuccino";
-        prise = 0;
+    RecipeCoffee() {
         priseEspresso = 5;
         priseAmericano = 7;
         priseCappuccino = 9;
@@ -41,14 +34,14 @@ public class RecipeCoffee {
         if (Ingredients.getSugar() > 0) {
             gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
                     " coffee- " + Ingredients.getCoffee() + " water-" +
-                    Ingredients.getWater() + " cost-" + getCost() + "$\n" + " coffee ready with sugar-" +
+                    Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" + " coffee ready with sugar-" +
                     Ingredients.getSugar() + "\n\n");
 
         } else {
             if (Ingredients.getSugar() == 0) {
                 gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
                         " coffee- " + Ingredients.getCoffee() + " water-" +
-                        Ingredients.getWater() + " cost-" + getCost() + "$\n" + " coffee ready sugarless\n\n");
+                        Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" + " coffee ready sugarless\n\n");
             }
         }
     }
@@ -93,52 +86,53 @@ public class RecipeCoffee {
         ingr.takeIngredientsStock();
     }
 
-    public int getCost() {
+    int getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
+
+    private void setCost(int cost) {
         this.cost = cost;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String getName1() {
+    String getName1() {
         return name1;
     }
 
-    public String getName2() {
+    String getName2() {
         return name2;
     }
 
-    public String getName3() {
+    String getName3() {
         return name3;
     }
 
-    public int getPriseAmericano() {
+    int getPriseAmericano() {
         return priseAmericano;
     }
 
-    public int getPriseEspresso() {
+    int getPriseEspresso() {
         return priseEspresso;
     }
 
-    public int getPriseCappuccino() {
+    int getPriseCappuccino() {
         return priseCappuccino;
     }
 
-    public int getPrise() {
+    int getPrise() {
         return prise;
     }
 
-    public static String setName(String name) {
+    private static String setName(String name) {
         RecipeCoffee.name = name;
         return name;
     }
 
-    public static int setPrise(int prise) {
+    private static int setPrise(int prise) {
         RecipeCoffee.prise = prise;
         return prise;
     }

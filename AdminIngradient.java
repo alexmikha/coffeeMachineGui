@@ -1,21 +1,22 @@
 
 import java.util.Arrays;
 
-public class AdminIngradient {
+class AdminIngradient {
 
     private Gui gui;
-    Ingredients ing = new Ingredients(this);
+    private Ingredients ing = new Ingredients();
     String passIngr = "i";
     String loginIngr = "1";
-    String[] passwordIngrItem = {" Welcome to menuAdminIngradients\n" + " Enter password\n"};
-    String[] accessAdminIngrItem = {" \nAccess Granted!\n\n" + " add Ingradients - \n" +
+    private String[] passwordIngrItem = {" Welcome to menuAdminIngradients\n" + " Enter password\n"};
+    private String[] accessAdminIngrItem = {" \nAccess Granted!\n\n" + " Add Ingradients - \n" +
             "press button Yes\n" + " See how many Ingradients in store - \n" + "press button No\n"};
-    String[] addIngrItem = {" Added Ingradients in store\n"};
-    final ThreadLocal<String[]> showIngrItem = new ThreadLocal<String[]>() {
+    private String[] addIngrItem = {" Added Ingradients in store\n"};
+    private final ThreadLocal<String[]> showIngrItem = new ThreadLocal<String[]>() {
         @Override
         protected String[] initialValue() {
-            return new String[]{" Ingradients in store is left:\n" + " coffee= " + ing.getIsLeftCoffee() + ",\n" +
-                    " milk=" + ing.getIsLeftMilk() + ",\n" + " water=" + ing.getIsLeftWater() + ",\n" + " sugar=" + ing.getIsLeftSugar() + "\n"};
+            return new String[]{" Ingradients in store is left:\n" + " coffee= " + Ingredients.getIsLeftCoffee() + ",\n" +
+                    " milk=" + Ingredients.getIsLeftMilk() + ",\n" + " water=" + Ingredients.getIsLeftWater() + ",\n" +
+                    " sugar=" + Ingredients.getIsLeftSugar() + "\n"};
         }
     };
 

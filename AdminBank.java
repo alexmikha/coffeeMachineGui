@@ -1,29 +1,29 @@
 
 import java.util.Arrays;
 
-public class AdminBank {
+class AdminBank {
 
     private Gui gui;
-    Bank bnk = new Bank();
+    private Bank bnk = new Bank();
     private int takeBankAll;
-    int bank = 0;
-    String passBank = "b";
+    private int bank = 0;
+     String passBank = "b";
     String loginBank = "2";
-    String[] passwordBankItem = {" Welcome to menuAdminBank\n" + " Enter password\n"};
-    String[] accessAdminIngrItem = {" \nAccess Granted!\n\n" + " Take money- press button Yes\n" +
+    private String[] passwordBankItem = {" Welcome to menuAdminBank\n" + " Enter password\n"};
+    private String[] accessAdminIngrItem = {" \nAccess Granted!\n\n" + " Take money- press button Yes\n" +
             " See how much money in the Bank- press button No\n"};
-    String[] bankHasItem = {" Bank has: " + bnk.getBankMin() + "$\n"};
+    private String[] bankHasItem = {" Bank has: " + bnk.getBankMin() + "$\n"};
 
-    final ThreadLocal<String[]> lookAllBankItem = new ThreadLocal<String[]>() {
+    private final ThreadLocal<String[]> lookAllBankItem = new ThreadLocal<String[]>() {
         @Override
         protected String[] initialValue() {
             return new String[]{" Bank has: " + getBank() + "\n" +
                     " Bank has max: " + bnk.getBankMax() + "\n" +
-                    " Bank: " + bnk.getBankList() + "\n"};
+                    " Bank: " + Bank.getBankList() + "\n"};
         }
     };
 
-    final ThreadLocal<String[]> takeBankItem = new ThreadLocal<String[]>() {
+    private final ThreadLocal<String[]> takeBankItem = new ThreadLocal<String[]>() {
         @Override
         protected String[] initialValue() {
             return new String[]{"Bank has: " + getBank() + "$\n" + " Took: " + getTakeBankAll() + "$\n" +
@@ -78,19 +78,19 @@ public class AdminBank {
         gui.getTextArea1().append(Arrays.toString(lookAllBankItem.get()));
     }
 
-    int getTakeBankAll() {
+    private int getTakeBankAll() {
         return takeBankAll;
     }
 
-    void setTakeBankAll(int takeBankAll) {
+    private void setTakeBankAll(int takeBankAll) {
         this.takeBankAll = takeBankAll;
     }
 
-    int getBank() {
+    private int getBank() {
         return bank;
     }
 
-    void setBank(int bank) {
+    private void setBank(int bank) {
         this.bank = bank;
     }
 

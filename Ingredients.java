@@ -2,32 +2,26 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Ingredients {
+class Ingredients {
 
-    static Map<String, Integer> map = new HashMap<>();
-    private Gui gui;
-    private AdminIngradient adminIngradient;
+    private static Map<String, Integer> map = new HashMap<>();
     final ThreadLocal<String[]> showIngr1Item = new ThreadLocal<String[]>() {
         @Override
         protected String[] initialValue() {
             return new String[]{"Ingredients added to the store: \n" + map.toString()};
         }
     };
-    static int coffee;
-    static int water;
-    static int milk;
+    private static int coffee;
+    private static int water;
+    private static int milk;
     private static int sugar;
-
-    private int coffeeMin = 7;
+    //    private int coffeeMin = 7;
     private int coffeeMax = 21;
-
-    private int waterMin = 30;
+    //    private int waterMin = 30;
     private int waterMax = 350;
-
-    private int milkrMin = 70;
+    //    private int milkrMin = 70;
     private int milkMax = 280;
-
-    private int sugarMin = 4;
+    //    private int sugarMin = 4;
     private int sugarMax = 20;
 
     private static int isLeftCoffee = 0;
@@ -36,30 +30,22 @@ public class Ingredients {
     private static int isLeftSugar = 0;
     static int a;
 
-    public Ingredients(Gui igredients) {
-        this.gui = igredients;
+    Ingredients() {
     }
 
-    public Ingredients(AdminIngradient ingredients) {
-        this.adminIngradient = ingredients;
-    }
-
-    public Ingredients(int coffee, int water, int milk, int sugar) {
+    Ingredients(int coffee, int water, int milk, int sugar) {
         Ingredients.coffee = coffee;
         Ingredients.water = water;
         Ingredients.milk = milk;
         Ingredients.sugar = sugar;
     }
 
-    public Ingredients() {
-    }
-
-    public void addIngradientsStock() {
+    void addIngradientsStock() {
         map.clear();
         fillStock();
     }
 
-    public void fillStock() {
+    void fillStock() {
         map.clear();
         map.put("coffee", 0);
         map.put("milk", 0);
@@ -67,7 +53,7 @@ public class Ingredients {
         map.put("sugar", 0);
     }
 
-    public void showIngradients() {
+    void showIngradients() {
         isLeftCoffee = coffeeMax - map.getOrDefault("coffee", coffee);
         setIsLeftCoffee(isLeftCoffee);
         isLeftWater = waterMax - map.getOrDefault("water", water);
@@ -98,7 +84,7 @@ public class Ingredients {
         return a;
     }
 
-    public void takeIngredientsStock() {
+    void takeIngredientsStock() {
         if (!map.isEmpty()) {
 
             int value = map.get("coffee");
@@ -116,87 +102,87 @@ public class Ingredients {
             fillStock();
     }
 
-    public int getSugarMax() {
+    private int getSugarMax() {
         return sugarMax;
     }
 
-    public int getMilkMax() {
+    private int getMilkMax() {
         return milkMax;
     }
 
-    public int getWaterMax() {
+    private int getWaterMax() {
         return waterMax;
     }
 
-    public int getCoffeeMax() {
+    private int getCoffeeMax() {
         return coffeeMax;
     }
 
-    public static int getSugar() {
+    static int getSugar() {
         return sugar;
     }
 
-    public static void setSugar(int sugar) {
+    static void setSugar(int sugar) {
         Ingredients.sugar = sugar;
     }
 
-    public static void setCoffee(int coffee) {
+    static void setCoffee(int coffee) {
         Ingredients.coffee = coffee;
     }
 
-    public static int getCoffee() {
+    static int getCoffee() {
         return coffee;
     }
 
-    public static void setWater(int water) {
+    static void setWater(int water) {
         Ingredients.water = water;
     }
 
-    public static int getWater() {
+    static int getWater() {
         return water;
     }
 
-    public static void setMilk(int milk) {
+    static void setMilk(int milk) {
         Ingredients.milk = milk;
     }
 
-    public static int getMilk() {
+    static int getMilk() {
         return milk;
     }
 
-    public static Map<String, Integer> getMap() {
-        return map;
-    }
+//    public static Map<String, Integer> getMap() {
+//        return map;
+//    }
 
-    public static int getIsLeftCoffee() {
+    static int getIsLeftCoffee() {
         return isLeftCoffee;
     }
 
-    public static void setIsLeftCoffee(int isLeftCoffee) {
+    private static void setIsLeftCoffee(int isLeftCoffee) {
         Ingredients.isLeftCoffee = isLeftCoffee;
     }
 
-    public static int getIsLeftWater() {
+    static int getIsLeftWater() {
         return isLeftWater;
     }
 
-    public static void setIsLeftWater(int isLeftWater) {
+    private static void setIsLeftWater(int isLeftWater) {
         Ingredients.isLeftWater = isLeftWater;
     }
 
-    public static int getIsLeftMilk() {
+    static int getIsLeftMilk() {
         return isLeftMilk;
     }
 
-    public static void setIsLeftMilk(int isLeftMilk) {
+    private static void setIsLeftMilk(int isLeftMilk) {
         Ingredients.isLeftMilk = isLeftMilk;
     }
 
-    public static int getIsLeftSugar() {
+    static int getIsLeftSugar() {
         return isLeftSugar;
     }
 
-    public static void setIsLeftSugar(int isLeftSugar) {
+    private static void setIsLeftSugar(int isLeftSugar) {
         Ingredients.isLeftSugar = isLeftSugar;
     }
 }

@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class SWorker1 extends SwingWorker<Object, Object> {
+class SWorker1 extends SwingWorker<Object, Object> {
 
     private Gui gui;
 

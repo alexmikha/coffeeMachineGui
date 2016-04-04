@@ -5,16 +5,11 @@ import java.util.List;
 public class Bank {
 
     static List<Integer> bankList = new ArrayList<>();
-    private Gui gui;
     private int bankAll;
     private int bankMin = 10;
     private int bankMax = 29;
-    int bank;
+    private int bank;
     static int b;
-
-    Bank(Gui bank) {
-        this.gui = bank;
-    }
 
     Bank() {
     }
@@ -50,23 +45,23 @@ public class Bank {
         return cost;
     }
 
-    public int getBankAll() {
+    private int getBankAll() {
         return bankAll;
     }
 
-    public void setBankAll(int bankAll) {
+    private void setBankAll(int bankAll) {
         this.bankAll = bankAll;
     }
 
-    public int getBankMin() {
+    int getBankMin() {
         return bankMin;
     }
 
-    public int getBankMax() {
+    int getBankMax() {
         return bankMax;
     }
 
-    public static List<Integer> getBankList() {
+    static List<Integer> getBankList() {
         return bankList;
     }
 
