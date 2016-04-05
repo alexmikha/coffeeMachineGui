@@ -30,13 +30,13 @@ class RecipeCoffee {
         priseCappuccino = 9;
     }
 
-    private void selectSugar(String name) {
+     void selectSugar(String name) {
         if (Ingredients.getSugar() > 0)
             gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
                     " coffee- " + Ingredients.getCoffee() + " water-" +
                     Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" +
                     " coffee ready with sugar-" + Ingredients.getSugar() + "\n\n");
-        else if (Ingredients.getSugar() == 0)
+        else
             gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
                     " coffee- " + Ingredients.getCoffee() + " water-" +
                     Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" +
