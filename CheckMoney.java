@@ -8,7 +8,7 @@ class CheckMoney {
     static int moneycm = 0;
     private int money;
     private static int change;
-    static int bad = 1;
+    static int verifyMoney = 1;
 
     CheckMoney(Gui checkMoney) {
         this.gui = checkMoney;
@@ -25,16 +25,16 @@ class CheckMoney {
             }
             moneycm = sum;
             if (moneycm < rc.getPriseEspresso()) {
-                bad = 1;
+                verifyMoney = 1;
             }
         } else {
-            bad = 0;
+            verifyMoney = 0;
         }
         if (moneycm >= rc.getPriseEspresso()) {
             change = moneycm - rc.getPriseEspresso();
-            bad = 2;
+            verifyMoney = 2;
         }
-        return bad;
+        return verifyMoney;
     }
 
     int checkMoneyAmericano() {
@@ -48,16 +48,16 @@ class CheckMoney {
             }
             moneycm = sum;
             if (moneycm < rc.getPriseAmericano()) {
-                bad = 1;
+                verifyMoney = 1;
             }
         } else {
-            bad = 0;
+            verifyMoney = 0;
         }
         if (moneycm >= rc.getPriseAmericano()) {
             change = moneycm - rc.getPriseAmericano();
-            bad = 2;
+            verifyMoney = 2;
         }
-        return bad;
+        return verifyMoney;
     }
 
     int checkMoneyCappucino() {
@@ -71,16 +71,16 @@ class CheckMoney {
             }
             moneycm = sum;
             if (moneycm < rc.getPriseCappuccino()) {
-                bad = 1;
+                verifyMoney = 1;
             }
         } else {
-            bad = 0;
+            verifyMoney = 0;
         }
         if (moneycm >= rc.getPriseCappuccino()) {
             change = moneycm - rc.getPriseCappuccino();
-            bad = 2;
+            verifyMoney = 2;
         }
-        return bad;
+        return verifyMoney;
     }
 
     void takeChange() {

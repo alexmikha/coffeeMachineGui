@@ -27,13 +27,13 @@ class SWorker1 extends SwingWorker<Object, Object> {
         if (gui.getTextField1().getText().contains("Cappuccino"))
             gui.putMoneyCappuccino();
 
-        if (CheckMoney.bad == 1 && CheckMoney.bad != 2) {
+        if (CheckMoney.verifyMoney == 1 && CheckMoney.verifyMoney != 2) {
             if (gui.viewInsertMoney())
                 gui.removeAnimInsertMoney();
             gui.addMoney();
         }
 
-        if (CheckMoney.bad == 0) {
+        if (CheckMoney.verifyMoney == 0) {
             gui.viewOutMoney();
             gui.takeBadMoney();
         }

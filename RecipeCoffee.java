@@ -31,59 +31,54 @@ class RecipeCoffee {
     }
 
     private void selectSugar(String name) {
-        if (Ingredients.getSugar() > 0) {
+        if (Ingredients.getSugar() > 0)
             gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
                     " coffee- " + Ingredients.getCoffee() + " water-" +
-                    Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" + " coffee ready with sugar-" +
-                    Ingredients.getSugar() + "\n\n");
-
-        } else {
-            if (Ingredients.getSugar() == 0) {
-                gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
-                        " coffee- " + Ingredients.getCoffee() + " water-" +
-                        Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" + " coffee ready sugarless\n\n");
-            }
-        }
+                    Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" +
+                    " coffee ready with sugar-" + Ingredients.getSugar() + "\n\n");
+        else if (Ingredients.getSugar() == 0)
+            gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
+                    " coffee- " + Ingredients.getCoffee() + " water-" +
+                    Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" +
+                    " coffee ready sugarless\n\n");
     }
 
-    void recipeEspresso(int coffee, int water, int sugar) {
+    void recipeEspresso() {
         name = setName(name1);
-        int milk = 0;
         cost = 0;
-        Ingredients ingr = new Ingredients(coffee, water, milk, sugar);
+        Ingredients ingr = new Ingredients();
         Ingredients.setCoffee(7);
         Ingredients.setWater(30);
         Ingredients.setSugar(Ingredients.getSugar());
         setCost(5);
         prise = setPrise(priseCappuccino);
-        selectSugar(name);
         ingr.takeIngredientsStock();
+        selectSugar(name);
     }
 
-    void recipeAmericano(int coffee, int water, int sugar) {
+    void recipeAmericano() {
         name = setName(name2);
-        int milk = 0;
-        Ingredients ingr = new Ingredients(coffee, water, milk, sugar);
+        Ingredients ingr = new Ingredients();
         Ingredients.setCoffee(7);
         Ingredients.setWater(100);
         Ingredients.setSugar(Ingredients.getSugar());
         setCost(7);
         prise = setPrise(priseAmericano);
-        selectSugar(name);
         ingr.takeIngredientsStock();
+        selectSugar(name);
     }
 
-    void recipeCappuccino(int coffee, int water, int milk, int sugar) {
+    void recipeCappuccino() {
         name = setName(name3);
-        Ingredients ingr = new Ingredients(coffee, water, milk, sugar);
+        Ingredients ingr = new Ingredients();
         Ingredients.setCoffee(7);
         Ingredients.setWater(30);
         Ingredients.setMilk(70);
         Ingredients.setSugar(Ingredients.getSugar());
         setCost(9);
         prise = setPrise(priseCappuccino);
-        selectSugar(name);
         ingr.takeIngredientsStock();
+        selectSugar(name);
     }
 
     int getCost() {

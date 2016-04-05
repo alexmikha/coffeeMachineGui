@@ -210,11 +210,11 @@ public class Gui extends JFrame {
 
     private void makeDrink() {
         if (textField1.getText().equals(menuList.get(0)))
-            recipeCoffee.recipeEspresso(7, 30, sugarGui);
+            recipeCoffee.recipeEspresso();
         else if (textField1.getText().equals(menuList.get(1)))
-            recipeCoffee.recipeAmericano(7, 100, sugarGui);
+            recipeCoffee.recipeAmericano();
         else if (textField1.getText().equals(menuList.get(2)))
-            recipeCoffee.recipeCappuccino(7, 30, 70, sugarGui);
+            recipeCoffee.recipeCappuccino();
         bank.putBank(recipeCoffee.getCost());
         checkMoney.takeChange();
         checkIngBank();
