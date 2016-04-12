@@ -42,9 +42,11 @@ public class Gui extends JFrame {
         this.sugarGui = sugarGui;
     }
 
-    private String[] menuItem = {"Please select the drink:\n" + " Espresso    prise 5$\n" + " Americano   prise 7$\n" + " Cappuccino  prise 9&\n\n"};
+    private String[] menuItem = {" Please select the drink:\n" + " Espresso     price 5$\n" +
+            " Americano    price 7$\n" + " Cappuccino  price 9&\n\n"};
     private String[] checkAddMoneyItem = {" Not enough money for a drink\n", " Add money\n"};
-    private String[] chooseOrderItem = {" Do You want to cancel your order?\n" + " yes\n" + "  not\n"};
+    private String[] chooseOrderItem = {" Do You want to cancel your order?\n" + " Press the button - Yes\n" +
+            " Press the button -  No\n"};
     private String[] menuSugarItem = {" Do You want with sugar ?\n" + " 0", "1", "2", "3", "4\n\n"};
     private String[] menuMoneyItem = {" Insert money: ", "1", "2", "5", "10\n\n"};
     private String[] crowdedBankItem = {" The Bank is full !!!\n"};
@@ -67,8 +69,8 @@ public class Gui extends JFrame {
         cancelOrderItem = new ThreadLocal<String[]>() {
             @Override
             protected String[] initialValue() {
-                return new String[]{" Take Your the money: " + CheckMoney.checkMoneyList + " $\n" + "All money: " + moneyCancel +
-                        " $\n" + " Come again\n\n"};
+                return new String[]{" Take Your the money: " + CheckMoney.checkMoneyList + " $\n" + "All money: " +
+                        moneyCancel + " $\n" + " Come again\n\n"};
             }
         };
     }
@@ -409,9 +411,9 @@ public class Gui extends JFrame {
     }
 
     void putMoneyEspresso() {
-        if (CheckMoney.moneycm >= recipeCoffee.getPriseEspresso()) {
+        if (CheckMoney.moneycm >= recipeCoffee.getPriceEspresso()) {
             textArea1.setText(" You put: " + CheckMoney.moneycm + "$\n" + " Enough money for: " +
-                    recipeCoffee.getName1() + "-" + recipeCoffee.getPriseEspresso() + "$\n\n");
+                    recipeCoffee.getName1() + "-" + recipeCoffee.getPriceEspresso() + "$\n\n");
             chooseOrder();
         }
     }

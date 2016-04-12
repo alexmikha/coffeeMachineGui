@@ -6,10 +6,10 @@ class RecipeCoffee {
     private String name1;
     private String name2;
     private String name3;
-    private int priseAmericano;
-    private int priseEspresso;
-    private int priseCappuccino;
-    private static int prise;
+    private int priceAmericano;
+    private int priceEspresso;
+    private int priceCappuccino;
+    private static int price;
     private int cost = 0;
 
     RecipeCoffee(Gui recipeCoffee) {
@@ -18,28 +18,28 @@ class RecipeCoffee {
         name1 = "Espresso";
         name2 = "Americano";
         name3 = "Cappuccino";
-        prise = 0;
-        priseEspresso = 5;
-        priseAmericano = 7;
-        priseCappuccino = 9;
+        price = 0;
+        priceEspresso = 5;
+        priceAmericano = 7;
+        priceCappuccino = 9;
     }
 
     RecipeCoffee() {
-        priseEspresso = 5;
-        priseAmericano = 7;
-        priseCappuccino = 9;
+        priceEspresso = 5;
+        priceAmericano = 7;
+        priceCappuccino = 9;
     }
 
     private void selectSugar(String name) {
         if (Ingredients.getSugar() > 0)
             gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
-                    " coffee- " + Ingredients.getCoffee() + " water-" +
-                    Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" +
+                    " coffee- " + Ingredients.getCoffee() + ", water-" +
+                    Ingredients.getWater() + ", milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" +
                     " coffee ready with sugar-" + Ingredients.getSugar() + "\n\n");
         else
             gui.getTextArea1().setText(" Preparing drink: " + name + "\n" +
-                    " coffee- " + Ingredients.getCoffee() + " water-" +
-                    Ingredients.getWater() + " milk-" + Ingredients.getMilk() + " cost-" + getCost() + "$\n" +
+                    " coffee- " + Ingredients.getCoffee() + ", water-" +
+                    Ingredients.getWater() + ", milk-" + Ingredients.getMilk() + ", cost-" + getCost() + "$\n" +
                     " coffee ready sugarless\n\n");
     }
 
@@ -51,7 +51,7 @@ class RecipeCoffee {
         Ingredients.setWater(30);
         Ingredients.setSugar(Ingredients.getSugar());
         setCost(5);
-        prise = setPrise(priseCappuccino);
+        price = setPrice(priceCappuccino);
         ingr.takeIngredientsStock();
         selectSugar(name);
     }
@@ -63,7 +63,7 @@ class RecipeCoffee {
         Ingredients.setWater(100);
         Ingredients.setSugar(Ingredients.getSugar());
         setCost(7);
-        prise = setPrise(priseAmericano);
+        price = setPrice(priceAmericano);
         ingr.takeIngredientsStock();
         selectSugar(name);
     }
@@ -76,7 +76,7 @@ class RecipeCoffee {
         Ingredients.setMilk(70);
         Ingredients.setSugar(Ingredients.getSugar());
         setCost(9);
-        prise = setPrise(priseCappuccino);
+        price = setPrice(priceCappuccino);
         ingr.takeIngredientsStock();
         selectSugar(name);
     }
@@ -106,19 +106,19 @@ class RecipeCoffee {
     }
 
     int getPriseAmericano() {
-        return priseAmericano;
+        return priceAmericano;
     }
 
-    int getPriseEspresso() {
-        return priseEspresso;
+    int getPriceEspresso() {
+        return priceEspresso;
     }
 
     int getPriseCappuccino() {
-        return priseCappuccino;
+        return priceCappuccino;
     }
 
-    int getPrise() {
-        return prise;
+    int getPrice() {
+        return price;
     }
 
     private static String setName(String name) {
@@ -126,9 +126,9 @@ class RecipeCoffee {
         return name;
     }
 
-    private static int setPrise(int prise) {
-        RecipeCoffee.prise = prise;
-        return prise;
+    private static int setPrice(int price) {
+        RecipeCoffee.price = price;
+        return price;
     }
 }
 

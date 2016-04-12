@@ -24,14 +24,14 @@ class CheckMoney {
                 sum = sum + m;
             }
             moneycm = sum;
-            if (moneycm < rc.getPriseEspresso()) {
+            if (moneycm < rc.getPriceEspresso()) {
                 verifyMoney = 1;
             }
         } else {
             verifyMoney = 0;
         }
-        if (moneycm >= rc.getPriseEspresso()) {
-            change = moneycm - rc.getPriseEspresso();
+        if (moneycm >= rc.getPriceEspresso()) {
+            change = moneycm - rc.getPriceEspresso();
             verifyMoney = 2;
         }
         return verifyMoney;
@@ -86,8 +86,9 @@ class CheckMoney {
     void takeChange() {
         if (change != 0) {
             gui.getTextArea1().setText(" Preparing drink: " + rc.getName() + "\n" +
-                    " coffee- " + Ingredients.getCoffee() + " water-" + Ingredients.getWater() +
-                    " cost-" + rc.getPrise() + "$\n" +
+                    " coffee- " + Ingredients.getCoffee() + ", water-" + Ingredients.getWater() +
+                    ", milk-" + Ingredients.getMilk() +
+                    ", cost-" + rc.getPrice() + "$\n" +
                     " coffee ready with sugar-" + Ingredients.getSugar() + "\n You put: " + moneycm + "$\n" +
                     " Take the change: " + change + " $\n\n");
             gui.viewOutMoney();
